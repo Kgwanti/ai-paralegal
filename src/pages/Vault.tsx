@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/table";
 import { FileUp, Search } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import ChatWidget from "@/components/ChatWidget";
 
 type FileRecord = {
   id: string;
@@ -141,6 +142,8 @@ export default function Vault() {
           </div>
         </div>
       </main>
+
+      <ChatWidget />
     </div>
   );
 }
