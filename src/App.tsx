@@ -27,6 +27,7 @@ const App = () => (
           <Route path="/vault" element={<Vault />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
+        <ChatWidget />
       </TooltipProvider>
     </QueryClientProvider>
   </BrowserRouter>
