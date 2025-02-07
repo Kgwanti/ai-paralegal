@@ -13,7 +13,7 @@ export function Sidebar() {
   return (
     <aside className="fixed left-0 top-0 h-screen w-64 glass border-r border-white/[0.1] p-6 animate-slide-in">
       <div className="flex flex-col h-full">
-        <h1 className="text-2xl font-serif mb-8">Harvey</h1>
+        <h1 className="text-2xl font-serif mb-8">NexData</h1>
         
         <nav className="space-y-2">
           {menuItems.map((item) => (
