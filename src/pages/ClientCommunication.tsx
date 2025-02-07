@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Calendar } from "@/components/ui/calendar";
-import ChatInterface from "../components/ChatInterface";
+import { ChatInterface } from "@/components/ChatInterface";
 import { Bell, Mail, Send } from "lucide-react";
 
 interface Reminder {
