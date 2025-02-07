@@ -28,22 +28,15 @@ export default function Assistant() {
                 <TabsTrigger value="draft">Draft</TabsTrigger>
               </TabsList>
               
-              <TabsContent value="assist">
-                <div className="space-y-6">
-                  <div>
-                    <h3 className="font-medium mb-2">Query</h3>
-                    <Input 
-                      placeholder="Compare how these opinions differ or agree on the causation standard under the federal Anti-Kickback Statute."
-                      className="glass"
+              <TabsContent value="assist" className="h-[600px]">
+                <div className="h-full flex gap-4">
+                  <div className="flex-1">
+                    <ChatInterface 
+                      initialMessage="Hello! I'm your legal assistant. How can I help you analyze legal documents today?"
                     />
                   </div>
-
-                  <Button className="w-full glass glass-hover h-12">
-                    Ask NexData
-                  </Button>
-
-                  <div>
-                    <h3 className="font-medium mb-3">Sources</h3>
+                  <div className="w-64 space-y-4">
+                    <h3 className="font-medium">Sources</h3>
                     <div className="space-y-2">
                       {["U.S. ex rel Cairns.pdf", "U.S. ex rel Greenfield.pdf"].map((source) => (
                         <div key={source} className="flex items-center gap-3 p-3 glass rounded-lg glass-hover cursor-pointer">

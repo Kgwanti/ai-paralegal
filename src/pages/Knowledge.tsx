@@ -28,17 +28,13 @@ export default function Knowledge() {
           </header>
 
           <div className="glass rounded-2xl p-8 animate-fade-up">
-            <div className="space-y-6">
-              <Input 
-                placeholder="Ask NexData anything..."
-                className="glass"
-              />
-              
-              <Button className="w-full glass glass-hover h-12">
-                Ask NexData
-              </Button>
-
-              <div>
+            <div className="flex gap-6 h-[600px]">
+              <div className="flex-1">
+                <ChatInterface
+                  initialMessage="Welcome to the Knowledge Base! Ask me anything about legal, regulatory, or tax matters."
+                />
+              </div>
+              <div className="w-64">
                 <h3 className="font-medium mb-4">Databases</h3>
                 <div className="space-y-2">
                   {databases.map(({ icon: Icon, name }) => (
