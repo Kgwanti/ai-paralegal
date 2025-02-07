@@ -15,7 +15,7 @@ interface ChatInterfaceProps {
   onSendMessage?: (message: string) => void;
 }
 
-export default function ChatInterface({ initialMessage = "How can I assist you today?", onSendMessage }: ChatInterfaceProps) {
+export default function ChatInterface({ initialMessage = "Hello, I'm your AI legal assistant. Type 'Help' to see how I could be of use to you.", onSendMessage }: ChatInterfaceProps) {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState<Message[]>([
     { text: initialMessage, isUser: false },

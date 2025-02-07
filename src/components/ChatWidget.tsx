@@ -9,7 +9,7 @@ export default function ChatWidget() {
   const [isOpen, setIsOpen] = useState(false);
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState<{ text: string; isUser: boolean }[]>([
-    { text: "Hello! How can I help you with document management today?", isUser: false },
+    { text: "Hello, I'm your AI legal assistant. Type 'Help' to see how I could be of use to you.", isUser: false },
   ]);
 
   const handleSubmit = (e: React.FormEvent) => {
