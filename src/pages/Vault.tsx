@@ -140,6 +140,27 @@ export default function Vault() {
               </Table>
             </div>
           </div>
+
+          <div className="mt-8 glass rounded-2xl p-8 animate-fade-up">
+            <div className="flex gap-6 h-[400px]">
+              <div className="flex-1">
+                <ChatInterface
+                  initialMessage="Hi! I'm your document management assistant. I can help you organize, search, and analyze your documents. What can I help you with?"
+                />
+              </div>
+              <div className="w-64">
+                <h3 className="font-medium mb-4">Recent Documents</h3>
+                <div className="space-y-2">
+                  {files.slice(0, 5).map((file) => (
+                    <div key={file.id} className="flex items-center gap-3 p-3 glass rounded-lg glass-hover cursor-pointer">
+                      <FileText className="h-5 w-5 text-white/40" />
+                      <span className="text-sm truncate">{file.filename}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </main>
 
