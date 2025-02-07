@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -16,10 +15,8 @@ export default function ChatWidget() {
     e.preventDefault();
     if (!message.trim()) return;
 
-    // Add user message
     setMessages((prev) => [...prev, { text: message, isUser: true }]);
 
-    // Simulate AI response
     setTimeout(() => {
       setMessages((prev) => [
         ...prev,
@@ -87,17 +84,6 @@ export default function ChatWidget() {
           </form>
         </div>
       )}
-    </div>
-  );
-}
-import React from 'react';
-
-export default function ChatWidget() {
-  return (
-    <div className="fixed bottom-4 right-4 z-50">
-      <div className="glass rounded-full p-4 cursor-pointer hover:bg-white/10">
-        <div className="w-6 h-6" />
-      </div>
     </div>
   );
 }
