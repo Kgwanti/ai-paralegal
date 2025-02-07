@@ -32,7 +32,7 @@ export default function Knowledge() {
             <div className="flex gap-6 h-[600px]">
               <div className="flex-1">
                 <ChatInterface
-                  initialMessage="Welcome to the Knowledge Base! Ask me anything about legal, regulatory, or tax matters."
+                  initialMessage="Hi, I'm your integrated Legal AI Assistant with direct access to your database for handling tasks on your behalf."
                 />
               </div>
               <div className="w-64">
