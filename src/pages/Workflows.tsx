@@ -9,12 +9,16 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Calendar as CalendarComponent } from "@/components/ui/calendar";
+import { ChatInterface } from "@/components/ChatInterface";
+import { format } from "date-fns";
 
 interface Task {
   id: number;
   title: string;
   assignee: string;
-  dueDate?: string;
+  dueDate?: Date;
   completed: boolean;
 }
 
@@ -23,8 +27,8 @@ export default function Workflows() {
     { id: 1, title: "meetings", assignee: "Kgwanti Bilankulu", completed: false },
     { id: 2, title: "Install bolt.diy", assignee: "Kgwanti Bilankulu", completed: false },
     { id: 3, title: "follow-up with clients", assignee: "Kgwanti Bilankulu", completed: true },
-    { id: 4, title: "contact laura & warrick wiegand", assignee: "", dueDate: "February 8, 2025", completed: false },
-    { id: 5, title: "linkedin connections, messaging", assignee: "Kgwanti Bilankulu", dueDate: "February 7, 2025", completed: false },
+    { id: 4, title: "contact laura & warrick wiegand", assignee: "", dueDate: new Date("2025-02-08"), completed: false },
+    { id: 5, title: "linkedin connections, messaging", assignee: "Kgwanti Bilankulu", dueDate: new Date("2025-02-07"), completed: false },
   ]);
 
   const [newTask, setNewTask] = useState("");
@@ -32,6 +36,12 @@ export default function Workflows() {
   const toggleTask = (id: number) => {
     setTasks(tasks.map(task => 
       task.id === id ? { ...task, completed: !task.completed } : task
+    ));
+  };
+
+  const updateDueDate = (id: number, date: Date) => {
+    setTasks(tasks.map(task =>
+      task.id === id ? { ...task, dueDate: date } : task
     ));
   };
 
@@ -60,60 +70,86 @@ export default function Workflows() {
             </div>
           </div>
 
-          <div className="glass rounded-lg overflow-hidden">
-            <div className="grid grid-cols-4 p-4 border-b border-white/10 text-sm text-white/60">
-              <div className="flex items-center gap-2">
-                <span>Title</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <User className="h-4 w-4" />
-                <span>Assignee</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Calendar className="h-4 w-4" />
-                <span>Due</span>
-              </div>
-              <div className="flex items-center justify-end">
-                <Button variant="ghost" size="sm">
-                  <Plus className="h-4 w-4" />
-                </Button>
-                <Button variant="ghost" size="sm">
-                  <MoreHorizontal className="h-4 w-4" />
-                </Button>
-              </div>
-            </div>
-
-            <div className="divide-y divide-white/10">
-              {tasks.map(task => (
-                <div key={task.id} className="grid grid-cols-4 p-4 hover:bg-white/5">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div className="lg:col-span-2">
+              <div className="glass rounded-lg overflow-hidden">
+                <div className="grid grid-cols-4 p-4 border-b border-white/10 text-sm text-white/60">
                   <div className="flex items-center gap-2">
-                    <input
-                      type="checkbox"
-                      checked={task.completed}
-                      onChange={() => toggleTask(task.id)}
-                      className="rounded border-white/20"
-                    />
-                    <span className={cn(task.completed && "line-through text-white/40")}>
-                      {task.title}
-                    </span>
+                    <span>Title</span>
                   </div>
-                  <div className="text-white/60">{task.assignee}</div>
-                  <div className="text-white/60">{task.dueDate}</div>
-                  <div className="flex justify-end">
+                  <div className="flex items-center gap-2">
+                    <User className="h-4 w-4" />
+                    <span>Assignee</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Calendar className="h-4 w-4" />
+                    <span>Due</span>
+                  </div>
+                  <div className="flex items-center justify-end">
+                    <Button variant="ghost" size="sm">
+                      <Plus className="h-4 w-4" />
+                    </Button>
                     <Button variant="ghost" size="sm">
                       <MoreHorizontal className="h-4 w-4" />
                     </Button>
                   </div>
                 </div>
-              ))}
+
+                <div className="divide-y divide-white/10">
+                  {tasks.map(task => (
+                    <div key={task.id} className="grid grid-cols-4 p-4 hover:bg-white/5">
+                      <div className="flex items-center gap-2">
+                        <input
+                          type="checkbox"
+                          checked={task.completed}
+                          onChange={() => toggleTask(task.id)}
+                          className="rounded border-white/20"
+                        />
+                        <span className={cn(task.completed && "line-through text-white/40")}>
+                          {task.title}
+                        </span>
+                      </div>
+                      <div className="text-white/60">{task.assignee}</div>
+                      <div>
+                        <Popover>
+                          <PopoverTrigger asChild>
+                            <Button variant="ghost" size="sm" className="text-white/60">
+                              {task.dueDate ? format(task.dueDate, "PP") : "Set due date"}
+                            </Button>
+                          </PopoverTrigger>
+                          <PopoverContent className="w-auto p-0" align="start">
+                            <CalendarComponent
+                              mode="single"
+                              selected={task.dueDate}
+                              onSelect={(date) => date && updateDueDate(task.id, date)}
+                              initialFocus
+                            />
+                          </PopoverContent>
+                        </Popover>
+                      </div>
+                      <div className="flex justify-end">
+                        <Button variant="ghost" size="sm">
+                          <MoreHorizontal className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="p-4 border-t border-white/10">
+                  <Input
+                    placeholder="New task..."
+                    value={newTask}
+                    onChange={(e) => setNewTask(e.target.value)}
+                    className="bg-transparent border-white/20"
+                  />
+                </div>
+              </div>
             </div>
 
-            <div className="p-4 border-t border-white/10">
-              <Input
-                placeholder="New task..."
-                value={newTask}
-                onChange={(e) => setNewTask(e.target.value)}
-                className="bg-transparent border-white/20"
+            <div className="lg:col-span-1 h-[600px]">
+              <ChatInterface 
+                initialMessage="I'm your task management assistant. I can help you manage your tasks, set due dates, and track progress."
               />
             </div>
           </div>
