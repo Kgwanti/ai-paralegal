@@ -1,9 +1,8 @@
-
 import { useState } from "react";
 import { Sidebar } from "@/components/Sidebar";
 import { FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import ChatInterface from "../components/ChatInterface";
+import { ChatInterface } from "@/components/ChatInterface";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 
@@ -11,7 +10,7 @@ export default function Assistant() {
   return (
     <div className="min-h-screen bg-background text-foreground">
       <Sidebar />
-      
+
       <main className="pl-64 min-h-screen">
         <div className="max-w-5xl mx-auto px-8 py-12">
           <header className="mb-12 animate-fade-down">
@@ -28,7 +27,7 @@ export default function Assistant() {
                 <TabsTrigger value="assist">Assist</TabsTrigger>
                 <TabsTrigger value="draft">Draft</TabsTrigger>
               </TabsList>
-              
+
               <TabsContent value="assist" className="h-[600px]">
                 <div className="h-full flex gap-4">
                   <div className="flex-1">
