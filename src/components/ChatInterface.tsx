@@ -24,10 +24,8 @@ export function ChatInterface({ initialMessage = "Hello, I'm your AI legal assis
     e.preventDefault();
     if (!message.trim()) return;
 
-    // Add user message
     setMessages((prev) => [...prev, { text: message, isUser: true }]);
 
-    // Simulate AI response
     setTimeout(() => {
       setMessages((prev) => [
         ...prev,
@@ -79,31 +77,6 @@ export function ChatInterface({ initialMessage = "Hello, I'm your AI legal assis
           <Send className="h-4 w-4" />
         </Button>
       </form>
-    </div>
-  );
-}
-import React, { useState } from 'react';
-
-interface ChatInterfaceProps {
-  initialMessage?: string;
-}
-
-export default function ChatInterface({ initialMessage }: ChatInterfaceProps) {
-  const [messages, setMessages] = useState([
-    { text: initialMessage || 'Hello! How can I help you?', isUser: false }
-  ]);
-
-  return (
-    <div className="flex flex-col h-full">
-      <div className="flex-1 overflow-auto p-4 space-y-4">
-        {messages.map((msg, i) => (
-          <div key={i} className={`flex ${msg.isUser ? 'justify-end' : 'justify-start'}`}>
-            <div className={`p-3 rounded-lg max-w-[80%] ${msg.isUser ? 'bg-primary text-primary-foreground' : 'glass'}`}>
-              {msg.text}
-            </div>
-          </div>
-        ))}
-      </div>
     </div>
   );
 }
