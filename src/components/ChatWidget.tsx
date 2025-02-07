@@ -90,3 +90,14 @@ export default function ChatWidget() {
     </div>
   );
 }
+import React from 'react';
+
+export default function ChatWidget() {
+  return (
+    <div className="fixed bottom-4 right-4 z-50">
+      <div className="glass rounded-full p-4 cursor-pointer hover:bg-white/10">
+        <div className="w-6 h-6" />
+      </div>
+    </div>
+  );
+}
