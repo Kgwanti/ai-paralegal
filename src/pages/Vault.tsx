@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { Sidebar } from "@/components/Sidebar";
 import { Button } from "@/components/ui/button";
+import ChatInterface from "@/components/ChatInterface";
 import { Input } from "@/components/ui/input";
 import {
   Table,
