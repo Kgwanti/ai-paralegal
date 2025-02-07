@@ -3,7 +3,7 @@ import { Sidebar } from "@/components/Sidebar";
 import { Building2, Euro, FileText, Scale } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import ChatInterface from "@/components/ChatInterface";
+import ChatInterface from "../components/ChatInterface";
 
 const databases = [
   { icon: Building2, name: "EDGAR" },

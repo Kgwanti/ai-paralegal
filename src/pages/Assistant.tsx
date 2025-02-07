@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Sidebar } from "@/components/Sidebar";
 import { FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import ChatInterface from "@/components/ChatInterface";
+import ChatInterface from "../components/ChatInterface";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 
