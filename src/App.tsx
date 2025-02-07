@@ -9,6 +9,7 @@ import Assistant from "./pages/Assistant";
 import Knowledge from "./pages/Knowledge";
 import Workflows from "./pages/Workflows";
 import Vault from "./pages/Vault";
+import ClientCommunication from "./pages/ClientCommunication";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -25,6 +26,7 @@ const App = () => (
           <Route path="/research" element={<Knowledge />} />
           <Route path="/tasks" element={<Workflows />} />
           <Route path="/storage" element={<Vault />} />
+          <Route path="/communications" element={<ClientCommunication />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
         <ChatWidget />

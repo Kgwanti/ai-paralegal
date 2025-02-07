@@ -1,4 +1,4 @@
-import { FileText, Brain, Database, Workflow } from "lucide-react";
+import { FileText, Brain, Database, Workflow, MessageSquare } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Link, useLocation } from "react-router-dom";
 
@@ -7,6 +7,7 @@ const menuItems = [
   { icon: Database, label: "Research", href: "/research" },
   { icon: FileText, label: "Storage", href: "/storage" },
   { icon: Workflow, label: "Tasks", href: "/tasks" },
+  { icon: MessageSquare, label: "Communications", href: "/communications" },
 ];
 
 export function Sidebar() {
