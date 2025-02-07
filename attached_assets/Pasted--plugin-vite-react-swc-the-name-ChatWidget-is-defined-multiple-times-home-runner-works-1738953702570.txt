@@ -1,0 +1,207 @@
+[plugin:vite:react-swc] × the name `ChatWidget` is defined multiple times
+    ╭─[/home/runner/workspace/src/components/ChatWidget.tsx:8:1]
+  5 │ import { MessageCircle, X, Send } from "lucide-react";
+  6 │ import { cn } from "@/lib/utils";
+  7 │ 
+  8 │ export default function ChatWidget() {
+    ·                         ─────┬────
+    ·                              ╰── previous definition of `ChatWidget` here
+  9 │   const [isOpen, setIsOpen] = useState(false);
+ 10 │   const [message, setMessage] = useState("");
+ 11 │   const [messages, setMessages] = useState<{ text: string; isUser: boolean }[]>([
+ 12 │     { text: "Hello, I'm your AI legal assistant. Type 'Help' to see how I could be of use to you.", isUser: false },
+ 13 │   ]);
+ 14 │ 
+ 15 │   const handleSubmit = (e: React.FormEvent) => {
+ 16 │     e.preventDefault();
+ 17 │     if (!message.trim()) return;
+ 18 │ 
+ 19 │     // Add user message
+ 20 │     setMessages((prev) => [...prev, { text: message, isUser: true }]);
+ 21 │ 
+ 22 │     // Simulate AI response
+ 23 │     setTimeout(() => {
+ 24 │       setMessages((prev) => [
+ 25 │         ...prev,
+ 26 │         {
+ 27 │           text: "I'm here to help you manage your documents. What would you like to know?",
+ 28 │           isUser: false,
+ 29 │         },
+ 30 │       ]);
+ 31 │     }, 1000);
+ 32 │ 
+ 33 │     setMessage("");
+ 34 │   };
+ 35 │ 
+ 36 │   return (
+ 37 │     <div data-component-path="src/components/ChatWidget.tsx" data-component-name="div" data-component-line="37" data-component-file="ChatWidget.tsx" data-component-content="%7B%22className%22%3A%22fixed%20bottom-6%20right-6%20z-50%22%7D" className="fixed bottom-6 right-6 z-50">
+ 38 │       {!isOpen && (
+ 39 │         <Button data-component-path="src/components/ChatWidget.tsx" data-component-name="Button" data-component-line="39" data-component-file="ChatWidget.tsx" data-component-content="%7B%22className%22%3A%22rounded-full%20w-12%20h-12%20p-0%20bg-primary%20hover%3Abg-primary%2F90%22%7D"
+ 40 │           onClick={() => setIsOpen(true)}
+ 41 │           className="rounded-full w-12 h-12 p-0 bg-primary hover:bg-primary/90"
+ 42 │         >
+ 43 │           <MessageCircle data-component-path="src/components/ChatWidget.tsx" data-component-name="MessageCircle" data-component-line="43" data-component-file="ChatWidget.tsx" data-component-content="%7B%22className%22%3A%22h-6%20w-6%22%7D" className="h-6 w-6" />
+ 44 │         </Button>
+ 45 │       )}
+ 46 │ 
+ 47 │       {isOpen && (
+ 48 │         <div data-component-path="src/components/ChatWidget.tsx" data-component-name="div" data-component-line="48" data-component-file="ChatWidget.tsx" data-component-content="%7B%22className%22%3A%22bg-background%20border%20rounded-lg%20shadow-lg%20w-80%20h-96%20flex%20flex-col%20animate-in%20slide-in-from-bottom-10%22%7D" className="bg-background border rounded-lg shadow-lg w-80 h-96 flex flex-col animate-in slide-in-from-bottom-10">
+ 49 │           <div data-component-path="src/components/ChatWidget.tsx" data-component-name="div" data-component-line="49" data-component-file="ChatWidget.tsx" data-component-content="%7B%22className%22%3A%22p-4%20border-b%20flex%20justify-between%20items-center%22%7D" className="p-4 border-b flex justify-between items-center">
+ 50 │             <h3 data-component-path="src/components/ChatWidget.tsx" data-component-name="h3" data-component-line="50" data-component-file="ChatWidget.tsx" data-component-content="%7B%22text%22%3A%22Document%20Assistant%22%2C%22className%22%3A%22font-medium%22%7D" className="font-medium">Document Assistant</h3>
+ 51 │             <Button data-component-path="src/components/ChatWidget.tsx" data-component-name="Button" data-component-line="51" data-component-file="ChatWidget.tsx" data-component-content="%7B%22className%22%3A%22h-8%20w-8%22%7D"
+ 52 │               variant="ghost"
+ 53 │               size="icon"
+ 54 │               className="h-8 w-8"
+ 55 │               onClick={() => setIsOpen(false)}
+ 56 │             >
+ 57 │               <X data-component-path="src/components/ChatWidget.tsx" data-component-name="X" data-component-line="57" data-component-file="ChatWidget.tsx" data-component-content="%7B%22className%22%3A%22h-4%20w-4%22%7D" className="h-4 w-4" />
+ 58 │             </Button>
+ 59 │           </div>
+ 60 │ 
+ 61 │           <div data-component-path="src/components/ChatWidget.tsx" data-component-name="div" data-component-line="61" data-component-file="ChatWidget.tsx" data-component-content="%7B%22className%22%3A%22flex-1%20overflow-y-auto%20p-4%20space-y-4%22%7D" className="flex-1 overflow-y-auto p-4 space-y-4">
+ 62 │             {messages.map((msg, i) => (
+ 63 │               <div data-component-path="src/components/ChatWidget.tsx" data-component-name="div" data-component-line="63" data-component-file="ChatWidget.tsx" data-component-content="%7B%7D"
+ 64 │                 key={i}
+ 65 │                 className={cn(
+ 66 │                   "max-w-[80%] rounded-lg p-3",
+ 67 │                   msg.isUser
+ 68 │                     ? "bg-primary text-primary-foreground ml-auto"
+ 69 │                     : "bg-muted"
+ 70 │                 )}
+ 71 │               >
+ 72 │                 {msg.text}
+ 73 │               </div>
+ 74 │             ))}
+ 75 │           </div>
+ 76 │ 
+ 77 │           <form data-component-path="src/components/ChatWidget.tsx" data-component-name="form" data-component-line="77" data-component-file="ChatWidget.tsx" data-component-content="%7B%22className%22%3A%22p-4%20border-t%20flex%20gap-2%22%7D" onSubmit={handleSubmit} className="p-4 border-t flex gap-2">
+ 78 │             <Input data-component-path="src/components/ChatWidget.tsx" data-component-name="Input" data-component-line="78" data-component-file="ChatWidget.tsx" data-component-content="%7B%22placeholder%22%3A%22Type%20a%20message...%22%2C%22className%22%3A%22flex-1%22%7D"
+ 79 │               value={message}
+ 80 │               onChange={(e) => setMessage(e.target.value)}
+ 81 │               placeholder="Type a message..."
+ 82 │               className="flex-1"
+ 83 │             />
+ 84 │             <Button data-component-path="src/components/ChatWidget.tsx" data-component-name="Button" data-component-line="84" data-component-file="ChatWidget.tsx" data-component-content="%7B%22className%22%3A%22shrink-0%22%7D" type="submit" size="icon" className="shrink-0">
+ 85 │               <Send data-component-path="src/components/ChatWidget.tsx" data-component-name="Send" data-component-line="85" data-component-file="ChatWidget.tsx" data-component-content="%7B%22className%22%3A%22h-4%20w-4%22%7D" className="h-4 w-4" />
+ 86 │             </Button>
+ 87 │           </form>
+ 88 │         </div>
+ 89 │       )}
+ 90 │     </div>
+ 91 │   );
+ 92 │ }
+ 93 │ import React from 'react';
+ 94 │ 
+ 95 │ export default function ChatWidget() {
+    ·                         ─────┬────
+    ·                              ╰── `ChatWidget` redefined here
+ 96 │   return (
+ 97 │     <div data-component-path="src/components/ChatWidget.tsx" data-component-name="div" data-component-line="97" data-component-file="ChatWidget.tsx" data-component-content="%7B%22className%22%3A%22fixed%20bottom-4%20right-4%20z-50%22%7D" className="fixed bottom-4 right-4 z-50">
+ 98 │       <div data-component-path="src/components/ChatWidget.tsx" data-component-name="div" data-component-line="98" data-component-file="ChatWidget.tsx" data-component-content="%7B%22className%22%3A%22glass%20rounded-full%20p-4%20cursor-pointer%20hover%3Abg-white%2F10%22%7D" className="glass rounded-full p-4 cursor-pointer hover:bg-white/10">
+    ╰────
+  × the name `default` is exported multiple times
+     ╭─[/home/runner/workspace/src/components/ChatWidget.tsx:8:1]
+   5 │     import { MessageCircle, X, Send } from "lucide-react";
+   6 │     import { cn } from "@/lib/utils";
+   7 │     
+   8 │ ╭─▶ export default function ChatWidget() {
+   9 │ │     const [isOpen, setIsOpen] = useState(false);
+  10 │ │     const [message, setMessage] = useState("");
+  11 │ │     const [messages, setMessages] = useState<{ text: string; isUser: boolean }[]>([
+  12 │ │       { text: "Hello, I'm your AI legal assistant. Type 'Help' to see how I could be of use to you.", isUser: false },
+  13 │ │     ]);
+  14 │ │   
+  15 │ │     const handleSubmit = (e: React.FormEvent) => {
+  16 │ │       e.preventDefault();
+  17 │ │       if (!message.trim()) return;
+  18 │ │   
+  19 │ │       // Add user message
+  20 │ │       setMessages((prev) => [...prev, { text: message, isUser: true }]);
+  21 │ │   
+  22 │ │       // Simulate AI response
+  23 │ │       setTimeout(() => {
+  24 │ │         setMessages((prev) => [
+  25 │ │           ...prev,
+  26 │ │           {
+  27 │ │             text: "I'm here to help you manage your documents. What would you like to know?",
+  28 │ │             isUser: false,
+  29 │ │           },
+  30 │ │         ]);
+  31 │ │       }, 1000);
+  32 │ │   
+  33 │ │       setMessage("");
+  34 │ │     };
+  35 │ │   
+  36 │ │     return (
+  37 │ │       <div data-component-path="src/components/ChatWidget.tsx" data-component-name="div" data-component-line="37" data-component-file="ChatWidget.tsx" data-component-content="%7B%22className%22%3A%22fixed%20bottom-6%20right-6%20z-50%22%7D" className="fixed bottom-6 right-6 z-50">
+  38 │ │         {!isOpen && (
+  39 │ │           <Button data-component-path="src/components/ChatWidget.tsx" data-component-name="Button" data-component-line="39" data-component-file="ChatWidget.tsx" data-component-content="%7B%22className%22%3A%22rounded-full%20w-12%20h-12%20p-0%20bg-primary%20hover%3Abg-primary%2F90%22%7D"
+  40 │ │             onClick={() => setIsOpen(true)}
+  41 │ │             className="rounded-full w-12 h-12 p-0 bg-primary hover:bg-primary/90"
+  42 │ │           >
+  43 │ │             <MessageCircle data-component-path="src/components/ChatWidget.tsx" data-component-name="MessageCircle" data-component-line="43" data-component-file="ChatWidget.tsx" data-component-content="%7B%22className%22%3A%22h-6%20w-6%22%7D" className="h-6 w-6" />
+  44 │ │           </Button>
+  45 │ │         )}
+  46 │ │   
+  47 │ │         {isOpen && (
+  48 │ │           <div data-component-path="src/components/ChatWidget.tsx" data-component-name="div" data-component-line="48" data-component-file="ChatWidget.tsx" data-component-content="%7B%22className%22%3A%22bg-background%20border%20rounded-lg%20shadow-lg%20w-80%20h-96%20flex%20flex-col%20animate-in%20slide-in-from-bottom-10%22%7D" className="bg-background border rounded-lg shadow-lg w-80 h-96 flex flex-col animate-in slide-in-from-bottom-10">
+  49 │ │             <div data-component-path="src/components/ChatWidget.tsx" data-component-name="div" data-component-line="49" data-component-file="ChatWidget.tsx" data-component-content="%7B%22className%22%3A%22p-4%20border-b%20flex%20justify-between%20items-center%22%7D" className="p-4 border-b flex justify-between items-center">
+  50 │ │               <h3 data-component-path="src/components/ChatWidget.tsx" data-component-name="h3" data-component-line="50" data-component-file="ChatWidget.tsx" data-component-content="%7B%22text%22%3A%22Document%20Assistant%22%2C%22className%22%3A%22font-medium%22%7D" className="font-medium">Document Assistant</h3>
+  51 │ │               <Button data-component-path="src/components/ChatWidget.tsx" data-component-name="Button" data-component-line="51" data-component-file="ChatWidget.tsx" data-component-content="%7B%22className%22%3A%22h-8%20w-8%22%7D"
+  52 │ │                 variant="ghost"
+  53 │ │                 size="icon"
+  54 │ │                 className="h-8 w-8"
+  55 │ │                 onClick={() => setIsOpen(false)}
+  56 │ │               >
+  57 │ │                 <X data-component-path="src/components/ChatWidget.tsx" data-component-name="X" data-component-line="57" data-component-file="ChatWidget.tsx" data-component-content="%7B%22className%22%3A%22h-4%20w-4%22%7D" className="h-4 w-4" />
+  58 │ │               </Button>
+  59 │ │             </div>
+  60 │ │   
+  61 │ │             <div data-component-path="src/components/ChatWidget.tsx" data-component-name="div" data-component-line="61" data-component-file="ChatWidget.tsx" data-component-content="%7B%22className%22%3A%22flex-1%20overflow-y-auto%20p-4%20space-y-4%22%7D" className="flex-1 overflow-y-auto p-4 space-y-4">
+  62 │ │               {messages.map((msg, i) => (
+  63 │ │                 <div data-component-path="src/components/ChatWidget.tsx" data-component-name="div" data-component-line="63" data-component-file="ChatWidget.tsx" data-component-content="%7B%7D"
+  64 │ │                   key={i}
+  65 │ │                   className={cn(
+  66 │ │                     "max-w-[80%] rounded-lg p-3",
+  67 │ │                     msg.isUser
+  68 │ │                       ? "bg-primary text-primary-foreground ml-auto"
+  69 │ │                       : "bg-muted"
+  70 │ │                   )}
+  71 │ │                 >
+  72 │ │                   {msg.text}
+  73 │ │                 </div>
+  74 │ │               ))}
+  75 │ │             </div>
+  76 │ │   
+  77 │ │             <form data-component-path="src/components/ChatWidget.tsx" data-component-name="form" data-component-line="77" data-component-file="ChatWidget.tsx" data-component-content="%7B%22className%22%3A%22p-4%20border-t%20flex%20gap-2%22%7D" onSubmit={handleSubmit} className="p-4 border-t flex gap-2">
+  78 │ │               <Input data-component-path="src/components/ChatWidget.tsx" data-component-name="Input" data-component-line="78" data-component-file="ChatWidget.tsx" data-component-content="%7B%22placeholder%22%3A%22Type%20a%20message...%22%2C%22className%22%3A%22flex-1%22%7D"
+  79 │ │                 value={message}
+  80 │ │                 onChange={(e) => setMessage(e.target.value)}
+  81 │ │                 placeholder="Type a message..."
+  82 │ │                 className="flex-1"
+  83 │ │               />
+  84 │ │               <Button data-component-path="src/components/ChatWidget.tsx" data-component-name="Button" data-component-line="84" data-component-file="ChatWidget.tsx" data-component-content="%7B%22className%22%3A%22shrink-0%22%7D" type="submit" size="icon" className="shrink-0">
+  85 │ │                 <Send data-component-path="src/components/ChatWidget.tsx" data-component-name="Send" data-component-line="85" data-component-file="ChatWidget.tsx" data-component-content="%7B%22className%22%3A%22h-4%20w-4%22%7D" className="h-4 w-4" />
+  86 │ │               </Button>
+  87 │ │             </form>
+  88 │ │           </div>
+  89 │ │         )}
+  90 │ │       </div>
+  91 │ │     );
+  92 │ ├─▶ }
+     · ╰──── previous exported here
+  93 │     import React from 'react';
+  94 │     
+  95 │ ╭─▶ export default function ChatWidget() {
+  96 │ │     return (
+  97 │ │       <div data-component-path="src/components/ChatWidget.tsx" data-component-name="div" data-component-line="97" data-component-file="ChatWidget.tsx" data-component-content="%7B%22className%22%3A%22fixed%20bottom-4%20right-4%20z-50%22%7D" className="fixed bottom-4 right-4 z-50">
+  98 │ │         <div data-component-path="src/components/ChatWidget.tsx" data-component-name="div" data-component-line="98" data-component-file="ChatWidget.tsx" data-component-content="%7B%22className%22%3A%22glass%20rounded-full%20p-4%20cursor-pointer%20hover%3Abg-white%2F10%22%7D" className="glass rounded-full p-4 cursor-pointer hover:bg-white/10">
+  99 │ │           <div data-component-path="src/components/ChatWidget.tsx" data-component-name="div" data-component-line="99" data-component-file="ChatWidget.tsx" data-component-content="%7B%22className%22%3A%22w-6%20h-6%22%7D" className="w-6 h-6" />
+ 100 │ │         </div>
+ 101 │ │       </div>
+ 102 │ │     );
+ 103 │ ├─▶ }
+     · ╰──── exported more than once
+     ╰────
+
+Advice:   ☞ Exported identifiers must be unique
