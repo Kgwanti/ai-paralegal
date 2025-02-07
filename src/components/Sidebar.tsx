@@ -1,33 +1,37 @@
 
 import { FileText, Brain, Database, Workflow } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Link, useLocation } from "react-router-dom";
 
 const menuItems = [
-  { icon: Brain, label: "Assistant", href: "#assistant" },
-  { icon: Database, label: "Knowledge", href: "#knowledge" },
-  { icon: FileText, label: "Vault", href: "#vault" },
-  { icon: Workflow, label: "Workflows", href: "#workflows" },
+  { icon: Brain, label: "Assistant", href: "/assistant" },
+  { icon: Database, label: "Knowledge", href: "/knowledge" },
+  { icon: FileText, label: "Vault", href: "/vault" },
+  { icon: Workflow, label: "Workflows", href: "/workflows" },
 ];
 
 export function Sidebar() {
+  const location = useLocation();
+  
   return (
     <aside className="fixed left-0 top-0 h-screen w-64 glass border-r border-white/[0.1] p-6 animate-slide-in">
       <div className="flex flex-col h-full">
-        <h1 className="text-2xl font-serif mb-8">NexData</h1>
+        <Link to="/" className="text-2xl font-serif mb-8">NexData</Link>
         
         <nav className="space-y-2">
           {menuItems.map((item) => (
-            <a
+            <Link
               key={item.label}
-              href={item.href}
+              to={item.href}
               className={cn(
                 "flex items-center gap-3 px-4 py-3 rounded-lg glass-hover",
-                "text-sm font-medium text-white/70 hover:text-white transition-colors"
+                "text-sm font-medium text-white/70 hover:text-white transition-colors",
+                location.pathname === item.href && "bg-white/[0.06] text-white"
               )}
             >
               <item.icon className="h-5 w-5" />
               {item.label}
-            </a>
+            </Link>
           ))}
         </nav>
       </div>
