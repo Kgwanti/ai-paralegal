@@ -1,69 +1,120 @@
 
+import { useState } from "react";
 import { Sidebar } from "@/components/Sidebar";
 import { 
   FileEdit, Globe, ScrollText, Clock, UserRound,
-  Upload, Bot
+  Upload, Bot, LayoutGrid, CheckSquare, Plus, MoreHorizontal,
+  Calendar, User
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { cn } from "@/lib/utils";
 
-const tools = [
-  { icon: FileEdit, name: "Redlines" },
-  { icon: Globe, name: "Translation" },
-  { icon: ScrollText, name: "Compare Agreements" },
-  { icon: Clock, name: "Chronology" },
-  { icon: UserRound, name: "Client" },
-];
+interface Task {
+  id: number;
+  title: string;
+  assignee: string;
+  dueDate?: string;
+  completed: boolean;
+}
 
 export default function Workflows() {
+  const [tasks, setTasks] = useState<Task[]>([
+    { id: 1, title: "meetings", assignee: "Kgwanti Bilankulu", completed: false },
+    { id: 2, title: "Install bolt.diy", assignee: "Kgwanti Bilankulu", completed: false },
+    { id: 3, title: "follow-up with clients", assignee: "Kgwanti Bilankulu", completed: true },
+    { id: 4, title: "contact laura & warrick wiegand", assignee: "", dueDate: "February 8, 2025", completed: false },
+    { id: 5, title: "linkedin connections, messaging", assignee: "Kgwanti Bilankulu", dueDate: "February 7, 2025", completed: false },
+  ]);
+
+  const [newTask, setNewTask] = useState("");
+
+  const toggleTask = (id: number) => {
+    setTasks(tasks.map(task => 
+      task.id === id ? { ...task, completed: !task.completed } : task
+    ));
+  };
+
   return (
     <div className="min-h-screen bg-background text-foreground">
       <Sidebar />
       
       <main className="pl-64 min-h-screen">
-        <div className="max-w-5xl mx-auto px-8 py-12">
-          <header className="mb-12 animate-fade-down">
-            <p className="text-sm font-medium text-white/60 mb-2">Tasks</p>
-            <h1 className="text-5xl font-serif mb-4">Streamline Your Work</h1>
-            <p className="text-lg text-white/60">
-              Multi-model agents designed to collaborate with<br />
-              professionals to deliver precise, purpose-built work product.
-            </p>
-          </header>
+        <div className="max-w-6xl mx-auto px-8 py-12">
+          <div className="flex items-center justify-between mb-8">
+            <div className="flex items-center gap-2">
+              <CheckSquare className="h-6 w-6" />
+              <h1 className="text-2xl font-medium">Tasks</h1>
+            </div>
+            
+            <div className="flex items-center gap-4">
+              <Button variant="outline" size="sm">
+                <LayoutGrid className="h-4 w-4 mr-2" />
+                All tasks
+              </Button>
+              <Button variant="outline" size="sm">Board</Button>
+              <Button className="bg-primary" size="sm">
+                <Plus className="h-4 w-4 mr-2" />
+                New
+              </Button>
+            </div>
+          </div>
 
-          <div className="glass rounded-2xl p-8 animate-fade-up">
-            <div className="space-y-8">
-              <h2 className="text-xl font-medium">Start a new query</h2>
-              
-              <div className="grid grid-cols-5 gap-4">
-                {tools.map(({ icon: Icon, name }) => (
-                  <div key={name} className="flex flex-col items-center gap-2 p-4 glass rounded-lg glass-hover cursor-pointer">
-                    <Icon className="h-6 w-6 text-white/40" />
-                    <span className="text-sm text-center">{name}</span>
+          <div className="glass rounded-lg overflow-hidden">
+            <div className="grid grid-cols-4 p-4 border-b border-white/10 text-sm text-white/60">
+              <div className="flex items-center gap-2">
+                <span>Title</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <User className="h-4 w-4" />
+                <span>Assignee</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Calendar className="h-4 w-4" />
+                <span>Due</span>
+              </div>
+              <div className="flex items-center justify-end">
+                <Button variant="ghost" size="sm">
+                  <Plus className="h-4 w-4" />
+                </Button>
+                <Button variant="ghost" size="sm">
+                  <MoreHorizontal className="h-4 w-4" />
+                </Button>
+              </div>
+            </div>
+
+            <div className="divide-y divide-white/10">
+              {tasks.map(task => (
+                <div key={task.id} className="grid grid-cols-4 p-4 hover:bg-white/5">
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="checkbox"
+                      checked={task.completed}
+                      onChange={() => toggleTask(task.id)}
+                      className="rounded border-white/20"
+                    />
+                    <span className={cn(task.completed && "line-through text-white/40")}>
+                      {task.title}
+                    </span>
                   </div>
-                ))}
-              </div>
-
-              <div className="space-y-4">
-                <div className="flex items-center gap-2 text-sm">
-                  <span className="glass px-2 py-1 rounded">01</span>
-                  Upload Files
+                  <div className="text-white/60">{task.assignee}</div>
+                  <div className="text-white/60">{task.dueDate}</div>
+                  <div className="flex justify-end">
+                    <Button variant="ghost" size="sm">
+                      <MoreHorizontal className="h-4 w-4" />
+                    </Button>
+                  </div>
                 </div>
+              ))}
+            </div>
 
-                <div className="grid grid-cols-2 gap-4">
-                  <Button variant="outline" className="glass glass-hover h-12">
-                    <Upload className="h-4 w-4 mr-2" />
-                    Upload Files
-                  </Button>
-                  <Button variant="outline" className="glass glass-hover h-12">
-                    Import from Vault
-                  </Button>
-                </div>
-
-                <div className="flex items-center gap-3 p-4 glass rounded-lg">
-                  <Bot className="h-5 w-5" />
-                  <p className="text-sm">Processing...</p>
-                </div>
-              </div>
+            <div className="p-4 border-t border-white/10">
+              <Input
+                placeholder="New task..."
+                value={newTask}
+                onChange={(e) => setNewTask(e.target.value)}
+                className="bg-transparent border-white/20"
+              />
             </div>
           </div>
         </div>
