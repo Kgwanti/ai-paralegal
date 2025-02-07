@@ -1,8 +1,8 @@
 
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { Sidebar } from "@/components/Sidebar";
 import { Button } from "@/components/ui/button";
-import ChatInterface from "../components/ChatInterface";
+import ChatInterface from "@/components/ChatInterface";
 import { Input } from "@/components/ui/input";
 import {
   Table,
@@ -12,15 +12,16 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { FileUp, Search } from "lucide-react";
+import { FileUp, Search, FolderOpen, FileText, AlertCircle } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
-import ChatWidget from "@/components/ChatWidget";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 
 type FileRecord = {
   id: string;
   filename: string;
   document_type: string;
-  industry: string;
+  client: string;
   created_at: string;
 };
 
@@ -28,39 +29,67 @@ export default function Vault() {
   const [searchQuery, setSearchQuery] = useState("");
   const [files, setFiles] = useState<FileRecord[]>([]);
   const [isUploading, setIsUploading] = useState(false);
+  const [selectedFiles, setSelectedFiles] = useState<string[]>([]);
 
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
+    const files = event.target.files;
+    if (!files?.length) return;
 
     try {
       setIsUploading(true);
+      
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        const filePath = `${crypto.randomUUID()}-${file.name}`;
+        
+        const { error: uploadError } = await supabase.storage
+          .from("documents")
+          .upload(filePath, file);
 
-      // Upload file to Supabase Storage
-      const filePath = `${crypto.randomUUID()}-${file.name}`;
-      const { error: uploadError } = await supabase.storage
-        .from("documents")
-        .upload(filePath, file);
+        if (uploadError) throw uploadError;
 
-      if (uploadError) throw uploadError;
+        const { error: dbError } = await supabase.from("files").insert({
+          filename: file.name,
+          file_path: filePath,
+          document_type: "Contract",
+          client: "Unassigned",
+        });
 
-      // Save file metadata to database
-      const { error: dbError } = await supabase.from("files").insert({
-        filename: file.name,
-        file_path: filePath,
-        document_type: "Document", // Default value, could be made selectable
-        industry: "General", // Default value, could be made selectable
-      });
+        if (dbError) throw dbError;
+      }
 
-      if (dbError) throw dbError;
-
-      // Refresh file list
       fetchFiles();
     } catch (error) {
-      console.error("Error uploading file:", error);
+      console.error("Error uploading files:", error);
     } finally {
       setIsUploading(false);
     }
+  };
+
+  const handleDragEnd = async (result: any) => {
+    if (!result.destination) return;
+    
+    const { draggableId, destination } = result;
+    const newClient = destination.droppableId;
+
+    try {
+      const { error } = await supabase
+        .from('files')
+        .update({ client: newClient })
+        .eq('id', draggableId);
+
+      if (error) throw error;
+      
+      fetchFiles();
+    } catch (error) {
+      console.error('Error updating file client:', error);
+    }
+  };
+
+  const analyzeSelectedDocuments = async () => {
+    // This would call your AI service to analyze the selected documents
+    // For demo purposes, we'll just show a success message
+    console.log("Analyzing documents:", selectedFiles);
   };
 
   const fetchFiles = async () => {
@@ -77,6 +106,8 @@ export default function Vault() {
     setFiles(data || []);
   };
 
+  const clients = ["Client A", "Client B", "Client C", "Unassigned"];
+
   return (
     <div className="min-h-screen bg-background text-foreground">
       <Sidebar />
@@ -87,85 +118,107 @@ export default function Vault() {
             <p className="text-sm font-medium text-white/60 mb-2">Storage</p>
             <h1 className="text-5xl font-serif mb-4">Document Management</h1>
             <p className="text-lg text-white/60">
-              Store and manage your legal documents securely
+              AI-powered document analysis and organization
             </p>
           </header>
 
-          <div className="glass rounded-2xl p-8 animate-fade-up">
-            <div className="flex justify-between items-center mb-8">
-              <div className="relative flex-1 max-w-md">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/40" />
-                <Input
-                  placeholder="Search documents..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-10"
-                />
-              </div>
-              <div className="flex items-center gap-4">
-                <Button disabled={isUploading} className="relative">
-                  <input
-                    type="file"
-                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                    onChange={handleFileUpload}
-                    accept=".pdf,.doc,.docx"
-                  />
-                  <FileUp className="mr-2" />
-                  Upload Document
-                </Button>
-              </div>
-            </div>
+          <Tabs defaultValue="files" className="animate-fade-up">
+            <TabsList>
+              <TabsTrigger value="files">Files</TabsTrigger>
+              <TabsTrigger value="insights">AI Insights</TabsTrigger>
+            </TabsList>
 
-            <div className="rounded-lg overflow-hidden">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Document Name</TableHead>
-                    <TableHead>Type</TableHead>
-                    <TableHead>Industry</TableHead>
-                    <TableHead>Date Added</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {files.map((file) => (
-                    <TableRow key={file.id}>
-                      <TableCell>{file.filename}</TableCell>
-                      <TableCell>{file.document_type}</TableCell>
-                      <TableCell>{file.industry}</TableCell>
-                      <TableCell>
-                        {new Date(file.created_at).toLocaleDateString()}
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </div>
-          </div>
-
-          <div className="mt-8 glass rounded-2xl p-8 animate-fade-up">
-            <div className="flex gap-6 h-[400px]">
-              <div className="flex-1">
-                <ChatInterface
-                  initialMessage="Hi! I'm your document management assistant. I can help you organize, search, and analyze your documents. What can I help you with?"
-                />
-              </div>
-              <div className="w-64">
-                <h3 className="font-medium mb-4">Recent Documents</h3>
-                <div className="space-y-2">
-                  {files.slice(0, 5).map((file) => (
-                    <div key={file.id} className="flex items-center gap-3 p-3 glass rounded-lg glass-hover cursor-pointer">
-                      <FileText className="h-5 w-5 text-white/40" />
-                      <span className="text-sm truncate">{file.filename}</span>
-                    </div>
-                  ))}
+            <TabsContent value="files">
+              <div className="glass rounded-2xl p-8">
+                <div className="flex justify-between items-center mb-8">
+                  <div className="relative flex-1 max-w-md">
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/40" />
+                    <Input
+                      placeholder="Search documents..."
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      className="pl-10"
+                    />
+                  </div>
+                  <div className="flex items-center gap-4">
+                    <Button 
+                      variant="outline" 
+                      disabled={selectedFiles.length === 0}
+                      onClick={analyzeSelectedDocuments}
+                    >
+                      <AlertCircle className="mr-2 h-4 w-4" />
+                      Analyze Selected
+                    </Button>
+                    <Button disabled={isUploading} className="relative">
+                      <input
+                        type="file"
+                        className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                        onChange={handleFileUpload}
+                        accept=".pdf,.doc,.docx"
+                        multiple
+                      />
+                      <FileUp className="mr-2" />
+                      Upload Documents
+                    </Button>
+                  </div>
                 </div>
+
+                <DragDropContext onDragEnd={handleDragEnd}>
+                  <div className="grid grid-cols-4 gap-4">
+                    {clients.map((client) => (
+                      <Droppable key={client} droppableId={client}>
+                        {(provided) => (
+                          <div
+                            ref={provided.innerRef}
+                            {...provided.droppableProps}
+                            className="glass p-4 rounded-lg"
+                          >
+                            <h3 className="font-medium mb-4">{client}</h3>
+                            <div className="space-y-2">
+                              {files
+                                .filter((file) => file.client === client)
+                                .map((file, index) => (
+                                  <Draggable
+                                    key={file.id}
+                                    draggableId={file.id}
+                                    index={index}
+                                  >
+                                    {(provided) => (
+                                      <div
+                                        ref={provided.innerRef}
+                                        {...provided.draggableProps}
+                                        {...provided.dragHandleProps}
+                                        className="flex items-center gap-3 p-3 glass rounded-lg glass-hover cursor-pointer"
+                                      >
+                                        <FileText className="h-5 w-5 text-white/40" />
+                                        <span className="text-sm truncate">
+                                          {file.filename}
+                                        </span>
+                                      </div>
+                                    )}
+                                  </Draggable>
+                                ))}
+                              {provided.placeholder}
+                            </div>
+                          </div>
+                        )}
+                      </Droppable>
+                    ))}
+                  </div>
+                </DragDropContext>
               </div>
-            </div>
-          </div>
+            </TabsContent>
+
+            <TabsContent value="insights">
+              <div className="glass rounded-2xl p-8">
+                <ChatInterface
+                  initialMessage="I'm your document analysis assistant. Upload documents and I'll help extract key insights, terms, and generate summaries based on relevant laws and regulations."
+                />
+              </div>
+            </TabsContent>
+          </Tabs>
         </div>
       </main>
-
-      <ChatWidget />
     </div>
   );
 }
