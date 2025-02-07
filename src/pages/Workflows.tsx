@@ -4,7 +4,7 @@ import { Sidebar } from "@/components/Sidebar";
 import { 
   FileEdit, Globe, ScrollText, Clock, UserRound,
   Upload, Bot, LayoutGrid, CheckSquare, Plus, MoreHorizontal,
-  Calendar, User
+  Calendar, User, Briefcase
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -13,6 +13,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Calendar as CalendarComponent } from "@/components/ui/calendar";
 import { ChatInterface } from "@/components/ChatInterface";
 import { format } from "date-fns";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 interface Task {
   id: number;
@@ -20,18 +21,26 @@ interface Task {
   assignee: string;
   dueDate?: Date;
   completed: boolean;
+  client: string;
 }
 
 export default function Workflows() {
   const [tasks, setTasks] = useState<Task[]>([
-    { id: 1, title: "meetings", assignee: "Kgwanti Bilankulu", completed: false },
-    { id: 2, title: "Install bolt.diy", assignee: "Kgwanti Bilankulu", completed: false },
-    { id: 3, title: "follow-up with clients", assignee: "Kgwanti Bilankulu", completed: true },
-    { id: 4, title: "contact laura & warrick wiegand", assignee: "", dueDate: new Date("2025-02-08"), completed: false },
-    { id: 5, title: "linkedin connections, messaging", assignee: "Kgwanti Bilankulu", dueDate: new Date("2025-02-07"), completed: false },
+    { id: 1, title: "meetings", assignee: "Kgwanti Bilankulu", completed: false, client: "Smith & Co" },
+    { id: 2, title: "Install bolt.diy", assignee: "Kgwanti Bilankulu", completed: false, client: "Johnson LLC" },
+    { id: 3, title: "follow-up with clients", assignee: "Kgwanti Bilankulu", completed: true, client: "Smith & Co" },
+    { id: 4, title: "contact laura & warrick wiegand", assignee: "", dueDate: new Date("2025-02-08"), completed: false, client: "Johnson LLC" },
+    { id: 5, title: "linkedin connections, messaging", assignee: "Kgwanti Bilankulu", dueDate: new Date("2025-02-07"), completed: false, client: "Smith & Co" },
   ]);
 
   const [newTask, setNewTask] = useState("");
+  const [selectedClient, setSelectedClient] = useState<string>("all");
+
+  const clients = Array.from(new Set(tasks.map(task => task.client)));
+  
+  const filteredTasks = selectedClient === "all" 
+    ? tasks 
+    : tasks.filter(task => task.client === selectedClient);
 
   const toggleTask = (id: number) => {
     setTasks(tasks.map(task => 
@@ -58,6 +67,22 @@ export default function Workflows() {
             </div>
             
             <div className="flex items-center gap-4">
+              <Select value={selectedClient} onValueChange={setSelectedClient}>
+                <SelectTrigger className="w-[180px]">
+                  <SelectValue placeholder="Filter by client" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Clients</SelectItem>
+                  {clients.map(client => (
+                    <SelectItem key={client} value={client}>
+                      <div className="flex items-center">
+                        <Briefcase className="w-4 h-4 mr-2" />
+                        {client}
+                      </div>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
               <Button variant="outline" size="sm">
                 <LayoutGrid className="h-4 w-4 mr-2" />
                 All tasks
@@ -73,13 +98,17 @@ export default function Workflows() {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <div className="lg:col-span-2">
               <div className="glass rounded-lg overflow-hidden">
-                <div className="grid grid-cols-4 p-4 border-b border-white/10 text-sm text-white/60">
+                <div className="grid grid-cols-5 p-4 border-b border-white/10 text-sm text-white/60">
                   <div className="flex items-center gap-2">
                     <span>Title</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <User className="h-4 w-4" />
                     <span>Assignee</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Briefcase className="h-4 w-4" />
+                    <span>Client</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <Calendar className="h-4 w-4" />
@@ -96,8 +125,8 @@ export default function Workflows() {
                 </div>
 
                 <div className="divide-y divide-white/10">
-                  {tasks.map(task => (
-                    <div key={task.id} className="grid grid-cols-4 p-4 hover:bg-white/5">
+                  {filteredTasks.map(task => (
+                    <div key={task.id} className="grid grid-cols-5 p-4 hover:bg-white/5">
                       <div className="flex items-center gap-2">
                         <input
                           type="checkbox"
@@ -110,6 +139,10 @@ export default function Workflows() {
                         </span>
                       </div>
                       <div className="text-white/60">{task.assignee}</div>
+                      <div className="text-white/60 flex items-center gap-2">
+                        <Briefcase className="h-4 w-4" />
+                        {task.client}
+                      </div>
                       <div>
                         <Popover>
                           <PopoverTrigger asChild>
