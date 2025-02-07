@@ -21,10 +21,10 @@ const App = () => (
         <Sonner />
         <Routes>
           <Route path="/" element={<Index />} />
-          <Route path="/assistant" element={<Assistant />} />
-          <Route path="/knowledge" element={<Knowledge />} />
-          <Route path="/workflows" element={<Workflows />} />
-          <Route path="/vault" element={<Vault />} />
+          <Route path="/ai-paralegal" element={<Assistant />} />
+          <Route path="/research" element={<Knowledge />} />
+          <Route path="/tasks" element={<Workflows />} />
+          <Route path="/storage" element={<Vault />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
         <ChatWidget />

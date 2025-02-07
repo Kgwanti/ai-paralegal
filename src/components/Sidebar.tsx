@@ -1,23 +1,22 @@
-
 import { FileText, Brain, Database, Workflow } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Link, useLocation } from "react-router-dom";
 
 const menuItems = [
-  { icon: Brain, label: "Assistant", href: "/assistant" },
-  { icon: Database, label: "Knowledge", href: "/knowledge" },
-  { icon: FileText, label: "Vault", href: "/vault" },
-  { icon: Workflow, label: "Workflows", href: "/workflows" },
+  { icon: Brain, label: "AI Paralegal", href: "/ai-paralegal" },
+  { icon: Database, label: "Research", href: "/research" },
+  { icon: FileText, label: "Storage", href: "/storage" },
+  { icon: Workflow, label: "Tasks", href: "/tasks" },
 ];
 
 export function Sidebar() {
   const location = useLocation();
-  
+
   return (
     <aside className="fixed left-0 top-0 h-screen w-64 glass border-r border-white/[0.1] p-6 animate-slide-in">
       <div className="flex flex-col h-full">
         <Link to="/" className="text-2xl font-serif mb-8">NexData</Link>
-        
+
         <nav className="space-y-2">
           {menuItems.map((item) => (
             <Link

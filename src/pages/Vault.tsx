@@ -83,7 +83,7 @@ export default function Vault() {
       <main className="pl-64 min-h-screen">
         <div className="max-w-6xl mx-auto px-8 py-12">
           <header className="mb-12 animate-fade-down">
-            <p className="text-sm font-medium text-white/60 mb-2">Vault</p>
+            <p className="text-sm font-medium text-white/60 mb-2">Storage</p>
             <h1 className="text-5xl font-serif mb-4">Document Management</h1>
             <p className="text-lg text-white/60">
               Store and manage your legal documents securely

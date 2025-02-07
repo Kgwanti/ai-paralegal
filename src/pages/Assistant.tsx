@@ -15,7 +15,7 @@ export default function Assistant() {
       <main className="pl-64 min-h-screen">
         <div className="max-w-5xl mx-auto px-8 py-12">
           <header className="mb-12 animate-fade-down">
-            <p className="text-sm font-medium text-white/60 mb-2">Assistant</p>
+            <p className="text-sm font-medium text-white/60 mb-2">AI Paralegal</p>
             <h1 className="text-5xl font-serif mb-4">Tailored to Your Expertise</h1>
             <p className="text-lg text-white/60">
               Delegate complex tasks in natural language to your domain specific personal assistant.
