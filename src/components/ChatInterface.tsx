@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Send } from "lucide-react";
+import { Send, X } from "lucide-react";
 
 interface Message {
   text: string;
@@ -23,6 +23,7 @@ export function ChatInterface({
   const [messages, setMessages] = useState<Message[]>([
     { text: initialMessage, isUser: false },
   ]);
+  const [showHelpHint, setShowHelpHint] = useState(true);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -91,6 +92,21 @@ How can I help you with any of these areas today?`,
 
   return (
     <div className="flex flex-col h-full glass rounded-xl overflow-hidden">
+      {showHelpHint && (
+        <div className="flex items-center justify-between px-4 py-2 bg-muted/50 border-b">
+          <span className="text-sm text-muted-foreground">
+            Type "help" to see how I can be of assistance
+          </span>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="h-auto p-1"
+            onClick={() => setShowHelpHint(false)}
+          >
+            <X className="h-4 w-4" />
+          </Button>
+        </div>
+      )}
       <ScrollArea className="flex-1 p-4">
         <div className="space-y-4">
           {messages.map((msg, i) => (
