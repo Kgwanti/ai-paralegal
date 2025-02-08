@@ -1,25 +1,32 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { MessageCircle, X, Send } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useToast } from "@/components/ui/use-toast";
+import { callOpenRouter } from "@/lib/openrouter";
 
 export default function ChatWidget() {
+  const { toast } = useToast();
   const [isOpen, setIsOpen] = useState(false);
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState<{ text: string; isUser: boolean }[]>([
     { text: "Hello, I'm your AI legal assistant. Type 'Help' to see how I could be of use to you.", isUser: false },
   ]);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!message.trim()) return;
 
     setMessages((prev) => [...prev, { text: message, isUser: true }]);
+    const userMessage = message;
+    setMessage("");
 
-    setTimeout(() => {
-      if (message.toLowerCase() === "help") {
+    try {
+      setIsLoading(true);
+
+      if (userMessage.toLowerCase() === "help") {
         setMessages((prev) => [
           ...prev,
           {
@@ -60,17 +67,22 @@ How can I help you with any of these areas today?`,
           },
         ]);
       } else {
+        const response = await callOpenRouter(userMessage);
         setMessages((prev) => [
           ...prev,
-          {
-            text: "I'm here to help you manage your documents. What would you like to know?",
-            isUser: false,
-          },
+          { text: response, isUser: false },
         ]);
       }
-    }, 1000);
-
-    setMessage("");
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to get response. Please try again.",
+        variant: "destructive",
+      });
+      console.error("Chat error:", error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -130,4 +142,3 @@ How can I help you with any of these areas today?`,
     </div>
   );
 }
-

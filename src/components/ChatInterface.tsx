@@ -4,6 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Send, X } from "lucide-react";
+import { callOpenRouter } from "@/utils/openrouter";
+import { useToast } from "@/components/ui/use-toast";
 
 interface Message {
   text: string;
@@ -19,20 +21,26 @@ export function ChatInterface({
   initialMessage = "Hello, I'm your AI legal assistant. Type 'Help' to see how I could be of use to you.", 
   onSendMessage 
 }: ChatInterfaceProps) {
+  const { toast } = useToast();
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState<Message[]>([
     { text: initialMessage, isUser: false },
   ]);
   const [showHelpHint, setShowHelpHint] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!message.trim()) return;
 
     setMessages((prev) => [...prev, { text: message, isUser: true }]);
+    const userMessage = message;
+    setMessage("");
 
-    setTimeout(() => {
-      if (message.toLowerCase() === "help") {
+    try {
+      setIsLoading(true);
+
+      if (userMessage.toLowerCase() === "help") {
         setMessages((prev) => [
           ...prev,
           {
@@ -73,21 +81,26 @@ How can I help you with any of these areas today?`,
           },
         ]);
       } else {
+        const response = await callOpenRouter(userMessage);
         setMessages((prev) => [
           ...prev,
-          {
-            text: "I understand your query. Let me help you with that.",
-            isUser: false,
-          },
+          { text: response, isUser: false },
         ]);
       }
-    }, 1000);
 
-    if (onSendMessage) {
-      onSendMessage(message);
+      if (onSendMessage) {
+        onSendMessage(userMessage);
+      }
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to get response. Please try again.",
+        variant: "destructive",
+      });
+      console.error("Chat error:", error);
+    } finally {
+      setIsLoading(false);
     }
-
-    setMessage("");
   };
 
   return (
@@ -134,8 +147,9 @@ How can I help you with any of these areas today?`,
           onChange={(e) => setMessage(e.target.value)}
           placeholder="Type your message..."
           className="flex-1"
+          disabled={isLoading}
         />
-        <Button type="submit" size="icon">
+        <Button type="submit" size="icon" disabled={isLoading}>
           <Send className="h-4 w-4" />
         </Button>
       </form>
