@@ -151,12 +151,3 @@ export type CompositeTypes<
   : PublicCompositeTypeNameOrOptions extends keyof PublicSchema["CompositeTypes"]
     ? PublicSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
     : never
-export interface DocumentInsight {
-  id: string;
-  file_id: string;
-  summary: string;
-  key_terms: string[];
-  risks: string[];
-  obligations: string[];
-  created_at: string;
-}
