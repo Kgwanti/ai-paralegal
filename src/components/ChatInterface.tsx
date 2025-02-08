@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -14,7 +15,10 @@ interface ChatInterfaceProps {
   onSendMessage?: (message: string) => void;
 }
 
-export function ChatInterface({ initialMessage = "Hello, I'm your AI legal assistant. Type 'Help' to see how I could be of use to you.", onSendMessage }: ChatInterfaceProps) {
+export function ChatInterface({ 
+  initialMessage = "Hello, I'm your AI legal assistant. Type 'Help' to see how I could be of use to you.", 
+  onSendMessage 
+}: ChatInterfaceProps) {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState<Message[]>([
     { text: initialMessage, isUser: false },
@@ -27,13 +31,55 @@ export function ChatInterface({ initialMessage = "Hello, I'm your AI legal assis
     setMessages((prev) => [...prev, { text: message, isUser: true }]);
 
     setTimeout(() => {
-      setMessages((prev) => [
-        ...prev,
-        {
-          text: "I understand your query. Let me help you with that.",
-          isUser: false,
-        },
-      ]);
+      if (message.toLowerCase() === "help") {
+        setMessages((prev) => [
+          ...prev,
+          {
+            text: `I can assist you with the following services:
+
+1. Document Analysis
+   • Risk assessment in legal contracts
+   • Key terms extraction
+   • Compliance verification
+
+2. Contract Drafting
+   • Template-based contract creation
+   • Custom clause suggestions
+   • Legal terminology validation
+
+3. External Information
+   • Legal research integration
+   • Case law references
+   • Regulatory updates
+
+4. Client Communications
+   • Automated reminder setup
+   • Follow-up scheduling
+   • Document request management
+
+5. Task Management
+   • Due date tracking
+   • Priority task scheduling
+   • Deadline reminders
+
+6. Team Collaboration
+   • Inter-firm communication
+   • Document sharing
+   • Task delegation
+
+How can I help you with any of these areas today?`,
+            isUser: false,
+          },
+        ]);
+      } else {
+        setMessages((prev) => [
+          ...prev,
+          {
+            text: "I understand your query. Let me help you with that.",
+            isUser: false,
+          },
+        ]);
+      }
     }, 1000);
 
     if (onSendMessage) {
