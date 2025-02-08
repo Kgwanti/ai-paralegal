@@ -11,6 +11,7 @@ export type Database = {
     Tables: {
       files: {
         Row: {
+          client: string
           created_at: string | null
           document_type: string
           file_path: string
@@ -20,6 +21,7 @@ export type Database = {
           updated_at: string | null
         }
         Insert: {
+          client?: string
           created_at?: string | null
           document_type: string
           file_path: string
@@ -29,6 +31,7 @@ export type Database = {
           updated_at?: string | null
         }
         Update: {
+          client?: string
           created_at?: string | null
           document_type?: string
           file_path?: string

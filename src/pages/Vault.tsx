@@ -1,4 +1,3 @@
-
 import { useState, useCallback } from "react";
 import { Sidebar } from "@/components/Sidebar";
 import { Button } from "@/components/ui/button";
@@ -23,6 +22,9 @@ type FileRecord = {
   document_type: string;
   client: string;
   created_at: string;
+  file_path: string;
+  industry: string;
+  updated_at: string;
 };
 
 export default function Vault() {
@@ -53,6 +55,7 @@ export default function Vault() {
           file_path: filePath,
           document_type: "Contract",
           client: "Unassigned",
+          industry: "Legal", // Adding a default value for industry
         });
 
         if (dbError) throw dbError;
