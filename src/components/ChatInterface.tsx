@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Send, X } from "lucide-react";
+import { Send, X, Loader2 } from "lucide-react";
 import { callOpenRouter } from "@/utils/openrouter";
 import { useToast } from "@/components/ui/use-toast";
 
@@ -138,6 +138,11 @@ How can I help you with any of these areas today?`,
               </div>
             </div>
           ))}
+          {isLoading && (
+            <div className="flex justify-center">
+              <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+            </div>
+          )}
         </div>
       </ScrollArea>
 
@@ -150,7 +155,11 @@ How can I help you with any of these areas today?`,
           disabled={isLoading}
         />
         <Button type="submit" size="icon" disabled={isLoading}>
-          <Send className="h-4 w-4" />
+          {isLoading ? (
+            <Loader2 className="h-4 w-4 animate-spin" />
+          ) : (
+            <Send className="h-4 w-4" />
+          )}
         </Button>
       </form>
     </div>

@@ -1,7 +1,8 @@
+
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { MessageCircle, X, Send } from "lucide-react";
+import { MessageCircle, X, Send, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useToast } from "@/components/ui/use-toast";
 import { callOpenRouter } from "@/utils/openrouter";
@@ -124,6 +125,11 @@ How can I help you with any of these areas today?`,
                 {msg.text}
               </div>
             ))}
+            {isLoading && (
+              <div className="flex justify-center">
+                <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+              </div>
+            )}
           </div>
 
           <form onSubmit={handleSubmit} className="p-4 border-t flex gap-2">
@@ -132,9 +138,14 @@ How can I help you with any of these areas today?`,
               onChange={(e) => setMessage(e.target.value)}
               placeholder="Type a message..."
               className="flex-1"
+              disabled={isLoading}
             />
-            <Button type="submit" size="icon" className="shrink-0">
-              <Send className="h-4 w-4" />
+            <Button type="submit" size="icon" className="shrink-0" disabled={isLoading}>
+              {isLoading ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <Send className="h-4 w-4" />
+              )}
             </Button>
           </form>
         </div>
