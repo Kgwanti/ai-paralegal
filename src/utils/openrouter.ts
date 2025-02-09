@@ -20,7 +20,7 @@ export async function callOpenRouter(message: string) {
         'HTTP-Referer': window.location.origin,
       },
       body: JSON.stringify({
-        model: 'mistralai/mistral-7b-instruct',
+        model: 'google/gemini-2.0-pro-exp-02-05:free',
         messages: [
           { role: 'system', content: 'You are a legal AI assistant helping with document analysis, contract drafting, and legal research.' },
           { role: 'user', content: message }
