@@ -1,12 +1,12 @@
 
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Send, X, Loader2, RefreshCw, FileUp } from "lucide-react";
-import { callOpenRouter } from "@/utils/openrouter";
 import { useToast } from "@/components/ui/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import { callOpenRouter } from "@/utils/openrouter";
+import { ChatHeader } from "./chat/ChatHeader";
+import { Messages } from "./chat/Messages";
+import { FileUploadButton } from "./chat/FileUploadButton";
+import { ChatInput } from "./chat/ChatInput";
 
 interface Message {
   text: string;
@@ -159,98 +159,28 @@ How can I help you with any of these areas today?`,
 
   return (
     <div className="flex flex-col h-full glass rounded-xl overflow-hidden">
-      {showHelpHint && (
-        <div className="flex items-center justify-between px-4 py-2 bg-muted/50 border-b">
-          <span className="text-sm text-muted-foreground">
-            Type "help" to see how I can be of assistance
-          </span>
-          <div className="flex gap-2">
-            <Button
-              variant="ghost"
-              size="sm"
-              className="h-auto p-1"
-              onClick={handleRefresh}
-            >
-              <RefreshCw className="h-4 w-4" />
-            </Button>
-            <Button
-              variant="ghost"
-              size="sm"
-              className="h-auto p-1"
-              onClick={() => setShowHelpHint(false)}
-            >
-              <X className="h-4 w-4" />
-            </Button>
-          </div>
-        </div>
-      )}
-      <ScrollArea className="flex-1 p-4">
-        <div className="space-y-4">
-          {messages.map((msg, i) => (
-            <div
-              key={i}
-              className={`flex ${msg.isUser ? "justify-end" : "justify-start"}`}
-            >
-              <div
-                className={`max-w-[80%] rounded-lg p-3 ${
-                  msg.isUser
-                    ? "bg-primary text-primary-foreground"
-                    : "bg-muted"
-                }`}
-              >
-                {msg.text}
-              </div>
-            </div>
-          ))}
-          {isLoading && (
-            <div className="flex justify-center">
-              <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
-            </div>
-          )}
-        </div>
-      </ScrollArea>
+      <ChatHeader 
+        showHelpHint={showHelpHint}
+        onRefresh={handleRefresh}
+        onHideHint={() => setShowHelpHint(false)}
+      />
+      
+      <Messages messages={messages} isLoading={isLoading} />
 
-      <form onSubmit={handleSubmit} className="p-4 border-t">
+      <div className="p-4 border-t">
         <div className="flex gap-2 mb-2">
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            className="gap-2"
-            disabled={isUploading}
-          >
-            <input
-              type="file"
-              className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-              onChange={handleFileUpload}
-              accept=".pdf,.doc,.docx"
-            />
-            {isUploading ? (
-              <Loader2 className="h-4 w-4 animate-spin" />
-            ) : (
-              <FileUp className="h-4 w-4" />
-            )}
-            Upload Document
-          </Button>
-        </div>
-        <div className="flex gap-2">
-          <Input
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-            placeholder="Type your message..."
-            className="flex-1"
-            disabled={isLoading}
+          <FileUploadButton 
+            isUploading={isUploading}
+            onFileUpload={handleFileUpload}
           />
-          <Button type="submit" size="icon" disabled={isLoading}>
-            {isLoading ? (
-              <Loader2 className="h-4 w-4 animate-spin" />
-            ) : (
-              <Send className="h-4 w-4" />
-            )}
-          </Button>
         </div>
-      </form>
+        <ChatInput 
+          message={message}
+          isLoading={isLoading}
+          onMessageChange={(e) => setMessage(e.target.value)}
+          onSubmit={handleSubmit}
+        />
+      </div>
     </div>
   );
 }
-
