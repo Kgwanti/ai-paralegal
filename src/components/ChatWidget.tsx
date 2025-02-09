@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { MessageCircle, X, Send } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useToast } from "@/components/ui/use-toast";
-import { callOpenRouter } from "@/lib/openrouter";
+import { callOpenRouter } from "@/utils/openrouter";
 
 export default function ChatWidget() {
   const { toast } = useToast();
