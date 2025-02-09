@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Send, X, Loader2 } from "lucide-react";
+import { Send, X, Loader2, RefreshCw } from "lucide-react";
 import { callOpenRouter } from "@/utils/openrouter";
 import { useToast } from "@/components/ui/use-toast";
 
@@ -28,6 +28,11 @@ export function ChatInterface({
   ]);
   const [showHelpHint, setShowHelpHint] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
+
+  const handleRefresh = () => {
+    setMessages([{ text: initialMessage, isUser: false }]);
+    setMessage("");
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -110,14 +115,24 @@ How can I help you with any of these areas today?`,
           <span className="text-sm text-muted-foreground">
             Type "help" to see how I can be of assistance
           </span>
-          <Button
-            variant="ghost"
-            size="sm"
-            className="h-auto p-1"
-            onClick={() => setShowHelpHint(false)}
-          >
-            <X className="h-4 w-4" />
-          </Button>
+          <div className="flex gap-2">
+            <Button
+              variant="ghost"
+              size="sm"
+              className="h-auto p-1"
+              onClick={handleRefresh}
+            >
+              <RefreshCw className="h-4 w-4" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="h-auto p-1"
+              onClick={() => setShowHelpHint(false)}
+            >
+              <X className="h-4 w-4" />
+            </Button>
+          </div>
         </div>
       )}
       <ScrollArea className="flex-1 p-4">

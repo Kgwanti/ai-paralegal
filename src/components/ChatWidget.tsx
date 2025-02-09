@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { MessageCircle, X, Send, Loader2 } from "lucide-react";
+import { MessageCircle, X, Send, Loader2, RefreshCw } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useToast } from "@/components/ui/use-toast";
 import { callOpenRouter } from "@/utils/openrouter";
@@ -15,6 +15,13 @@ export default function ChatWidget() {
     { text: "Hello, I'm your AI legal assistant. Type 'Help' to see how I could be of use to you.", isUser: false },
   ]);
   const [isLoading, setIsLoading] = useState(false);
+
+  const handleRefresh = () => {
+    setMessages([
+      { text: "Hello, I'm your AI legal assistant. Type 'Help' to see how I could be of use to you.", isUser: false },
+    ]);
+    setMessage("");
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -101,14 +108,24 @@ How can I help you with any of these areas today?`,
         <div className="bg-background border rounded-lg shadow-lg w-80 h-96 flex flex-col animate-in slide-in-from-bottom-10">
           <div className="p-4 border-b flex justify-between items-center">
             <h3 className="font-medium">Document Assistant</h3>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-8 w-8"
-              onClick={() => setIsOpen(false)}
-            >
-              <X className="h-4 w-4" />
-            </Button>
+            <div className="flex gap-2">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-8 w-8"
+                onClick={handleRefresh}
+              >
+                <RefreshCw className="h-4 w-4" />
+              </Button>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-8 w-8"
+                onClick={() => setIsOpen(false)}
+              >
+                <X className="h-4 w-4" />
+              </Button>
+            </div>
           </div>
 
           <div className="flex-1 overflow-y-auto p-4 space-y-4">
