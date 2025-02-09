@@ -3,9 +3,10 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Send, X, Loader2, RefreshCw } from "lucide-react";
+import { Send, X, Loader2, RefreshCw, FileUp } from "lucide-react";
 import { callOpenRouter } from "@/utils/openrouter";
 import { useToast } from "@/components/ui/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 
 interface Message {
   text: string;
@@ -28,10 +29,56 @@ export function ChatInterface({
   ]);
   const [showHelpHint, setShowHelpHint] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
 
   const handleRefresh = () => {
     setMessages([{ text: initialMessage, isUser: false }]);
     setMessage("");
+  };
+
+  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    try {
+      setIsUploading(true);
+      const filePath = `${crypto.randomUUID()}-${file.name}`;
+      
+      const { error: uploadError } = await supabase.storage
+        .from("documents")
+        .upload(filePath, file);
+
+      if (uploadError) throw uploadError;
+
+      const { error: dbError } = await supabase.from("files").insert({
+        filename: file.name,
+        file_path: filePath,
+        document_type: file.type.includes('pdf') ? 'PDF' : 'Document',
+        industry: 'Legal',
+      });
+
+      if (dbError) throw dbError;
+
+      setMessages(prev => [
+        ...prev,
+        { text: `📄 File uploaded: ${file.name}`, isUser: true },
+        { text: "I'll analyze this document and use it as context for our conversation.", isUser: false }
+      ]);
+
+      toast({
+        title: "Success",
+        description: "Document uploaded successfully",
+      });
+    } catch (error) {
+      console.error("Error uploading file:", error);
+      toast({
+        title: "Error",
+        description: "Failed to upload document. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsUploading(false);
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -80,6 +127,8 @@ export function ChatInterface({
    • Inter-firm communication
    • Document sharing
    • Task delegation
+
+You can also upload documents that I can analyze and use as context for our conversation. Simply click the upload button below the chat.
 
 How can I help you with any of these areas today?`,
             isUser: false,
@@ -161,22 +210,47 @@ How can I help you with any of these areas today?`,
         </div>
       </ScrollArea>
 
-      <form onSubmit={handleSubmit} className="p-4 border-t flex gap-2">
-        <Input
-          value={message}
-          onChange={(e) => setMessage(e.target.value)}
-          placeholder="Type your message..."
-          className="flex-1"
-          disabled={isLoading}
-        />
-        <Button type="submit" size="icon" disabled={isLoading}>
-          {isLoading ? (
-            <Loader2 className="h-4 w-4 animate-spin" />
-          ) : (
-            <Send className="h-4 w-4" />
-          )}
-        </Button>
+      <form onSubmit={handleSubmit} className="p-4 border-t">
+        <div className="flex gap-2 mb-2">
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            className="gap-2"
+            disabled={isUploading}
+          >
+            <input
+              type="file"
+              className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+              onChange={handleFileUpload}
+              accept=".pdf,.doc,.docx"
+            />
+            {isUploading ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              <FileUp className="h-4 w-4" />
+            )}
+            Upload Document
+          </Button>
+        </div>
+        <div className="flex gap-2">
+          <Input
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            placeholder="Type your message..."
+            className="flex-1"
+            disabled={isLoading}
+          />
+          <Button type="submit" size="icon" disabled={isLoading}>
+            {isLoading ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              <Send className="h-4 w-4" />
+            )}
+          </Button>
+        </div>
       </form>
     </div>
   );
 }
+
