@@ -3,19 +3,23 @@ import { supabase } from "@/integrations/supabase/client";
 
 export async function callOpenRouter(message: string) {
   try {
-    const { data: { OPENROUTER_API_KEY } } = await supabase
+    const { data, error } = await supabase
       .functions.invoke('get-secret', {
         body: { key: 'OPENROUTER_API_KEY' }
       });
 
-    if (!OPENROUTER_API_KEY) {
+    if (error) {
+      throw error;
+    }
+
+    if (!data?.OPENROUTER_API_KEY) {
       throw new Error('OpenRouter API key not found');
     }
 
     const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${OPENROUTER_API_KEY}`,
+        'Authorization': `Bearer ${data.OPENROUTER_API_KEY}`,
         'Content-Type': 'application/json',
         'HTTP-Referer': window.location.origin,
       },
@@ -32,8 +36,8 @@ export async function callOpenRouter(message: string) {
       throw new Error('Failed to get response from OpenRouter');
     }
 
-    const data = await response.json();
-    return data.choices[0].message.content;
+    const responseData = await response.json();
+    return responseData.choices[0].message.content;
   } catch (error) {
     console.error('Error calling OpenRouter:', error);
     throw error;
