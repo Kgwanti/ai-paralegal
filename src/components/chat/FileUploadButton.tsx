@@ -9,11 +9,11 @@ interface FileUploadButtonProps {
 
 export function FileUploadButton({ isUploading, onFileUpload }: FileUploadButtonProps) {
   const handleClick = (e: React.MouseEvent) => {
-    e.stopPropagation(); // Prevent click from bubbling up
+    e.stopPropagation();
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    e.stopPropagation(); // Prevent change event from bubbling up
+    e.stopPropagation();
     onFileUpload(e);
   };
 
@@ -22,15 +22,15 @@ export function FileUploadButton({ isUploading, onFileUpload }: FileUploadButton
       type="button"
       variant="outline"
       size="sm"
-      className="gap-2"
+      className="gap-2 relative"
       disabled={isUploading}
       onClick={handleClick}
     >
       <input
         type="file"
-        className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+        className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
         onChange={handleChange}
-        onClick={(e) => e.stopPropagation()} // Prevent click from bubbling up
+        onClick={(e) => e.stopPropagation()}
         accept=".pdf,.doc,.docx"
       />
       {isUploading ? (

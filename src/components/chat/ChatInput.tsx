@@ -13,17 +13,17 @@ interface ChatInputProps {
 export function ChatInput({ message, isLoading, onMessageChange, onSubmit }: ChatInputProps) {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    e.stopPropagation(); // Prevent form submission from bubbling up
+    e.stopPropagation();
     onSubmit(e);
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    e.stopPropagation(); // Prevent input change from bubbling up
+    e.stopPropagation();
     onMessageChange(e);
   };
 
   return (
-    <form onSubmit={handleSubmit} className="p-4 border-t" onClick={(e) => e.stopPropagation()}>
+    <form onSubmit={handleSubmit} className="p-4 border-t">
       <div className="flex gap-2">
         <Input
           value={message}
@@ -31,7 +31,6 @@ export function ChatInput({ message, isLoading, onMessageChange, onSubmit }: Cha
           placeholder="Type your message..."
           className="flex-1"
           disabled={isLoading}
-          onClick={(e) => e.stopPropagation()}
         />
         <Button type="submit" size="icon" disabled={isLoading}>
           {isLoading ? (
