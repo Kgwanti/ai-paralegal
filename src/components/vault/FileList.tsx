@@ -8,7 +8,7 @@ interface FileRecord {
   id: string;
   filename: string;
   document_type: string;
-  client_id: string;
+  client_id: string | null;
   created_at: string;
   file_path: string;
   industry: string;
@@ -31,10 +31,18 @@ export function FileList({ files, clients, onFileUpdate }: FileListProps) {
   const { toast } = useToast();
 
   const handleDragEnd = async (result: any) => {
-    if (!result.destination) return;
+    // Drop outside the list
+    if (!result.destination) {
+      return;
+    }
+
+    // Same location drop
+    if (result.source.droppableId === result.destination.droppableId) {
+      return;
+    }
     
     const { draggableId, destination } = result;
-    const clientId = destination.droppableId;
+    const clientId = destination.droppableId === "unassigned" ? null : destination.droppableId;
 
     try {
       const { error } = await supabase
@@ -61,13 +69,15 @@ export function FileList({ files, clients, onFileUpdate }: FileListProps) {
 
   return (
     <DragDropContext onDragEnd={handleDragEnd}>
-      <div className="grid grid-cols-4 gap-4">
-        <Droppable key="unassigned" droppableId="null">
-          {(provided) => (
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <Droppable droppableId="unassigned">
+          {(provided, snapshot) => (
             <div
               ref={provided.innerRef}
               {...provided.droppableProps}
-              className="glass p-4 rounded-lg"
+              className={`glass p-4 rounded-lg min-h-[200px] ${
+                snapshot.isDraggingOver ? 'bg-accent/10' : ''
+              }`}
             >
               <h3 className="font-medium mb-4">Unassigned</h3>
               <div className="space-y-2">
@@ -79,15 +89,17 @@ export function FileList({ files, clients, onFileUpdate }: FileListProps) {
                       draggableId={file.id}
                       index={index}
                     >
-                      {(provided) => (
+                      {(provided, snapshot) => (
                         <div
                           ref={provided.innerRef}
                           {...provided.draggableProps}
                           {...provided.dragHandleProps}
-                          className="flex items-center gap-3 p-3 glass rounded-lg glass-hover cursor-pointer"
+                          className={`flex items-center gap-3 p-3 glass rounded-lg glass-hover cursor-move transition-colors ${
+                            snapshot.isDragging ? 'bg-accent/20' : ''
+                          }`}
                         >
-                          <FileText className="h-5 w-5 text-white/40" />
-                          <span className="text-sm truncate">
+                          <FileText className="h-5 w-5 text-white/40 flex-shrink-0" />
+                          <span className="text-sm truncate flex-1">
                             {file.filename}
                           </span>
                         </div>
@@ -102,11 +114,13 @@ export function FileList({ files, clients, onFileUpdate }: FileListProps) {
         
         {clients.map((client) => (
           <Droppable key={client.id} droppableId={client.id}>
-            {(provided) => (
+            {(provided, snapshot) => (
               <div
                 ref={provided.innerRef}
                 {...provided.droppableProps}
-                className="glass p-4 rounded-lg"
+                className={`glass p-4 rounded-lg min-h-[200px] ${
+                  snapshot.isDraggingOver ? 'bg-accent/10' : ''
+                }`}
               >
                 <h3 className="font-medium mb-4">{client.name}</h3>
                 <div className="space-y-2">
@@ -118,15 +132,17 @@ export function FileList({ files, clients, onFileUpdate }: FileListProps) {
                         draggableId={file.id}
                         index={index}
                       >
-                        {(provided) => (
+                        {(provided, snapshot) => (
                           <div
                             ref={provided.innerRef}
                             {...provided.draggableProps}
                             {...provided.dragHandleProps}
-                            className="flex items-center gap-3 p-3 glass rounded-lg glass-hover cursor-pointer"
+                            className={`flex items-center gap-3 p-3 glass rounded-lg glass-hover cursor-move transition-colors ${
+                              snapshot.isDragging ? 'bg-accent/20' : ''
+                            }`}
                           >
-                            <FileText className="h-5 w-5 text-white/40" />
-                            <span className="text-sm truncate">
+                            <FileText className="h-5 w-5 text-white/40 flex-shrink-0" />
+                            <span className="text-sm truncate flex-1">
                               {file.filename}
                             </span>
                           </div>
