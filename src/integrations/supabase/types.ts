@@ -9,9 +9,33 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      clients: {
+        Row: {
+          created_at: string | null
+          id: string
+          industry: string | null
+          name: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          industry?: string | null
+          name: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          industry?: string | null
+          name?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       files: {
         Row: {
-          client: string
+          client_id: string | null
           created_at: string | null
           document_type: string
           file_path: string
@@ -21,7 +45,7 @@ export type Database = {
           updated_at: string | null
         }
         Insert: {
-          client?: string
+          client_id?: string | null
           created_at?: string | null
           document_type: string
           file_path: string
@@ -31,7 +55,7 @@ export type Database = {
           updated_at?: string | null
         }
         Update: {
-          client?: string
+          client_id?: string | null
           created_at?: string | null
           document_type?: string
           file_path?: string
@@ -40,7 +64,15 @@ export type Database = {
           industry?: string
           updated_at?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "files_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clients"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {

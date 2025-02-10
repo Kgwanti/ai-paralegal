@@ -1,37 +1,54 @@
-import { useState, useCallback } from "react";
+
+import { useState, useEffect } from "react";
 import { Sidebar } from "@/components/Sidebar";
 import { Button } from "@/components/ui/button";
 import { ChatInterface } from "@/components/ChatInterface";
 import { Input } from "@/components/ui/input";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { FileUp, Search, FolderOpen, FileText, AlertCircle } from "lucide-react";
+import { FileUp, Search, FileText, AlertCircle } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
+import { ClientManagement } from "@/components/vault/ClientManagement";
+import { useToast } from "@/components/ui/use-toast";
 
 type FileRecord = {
   id: string;
   filename: string;
   document_type: string;
-  client: string;
+  client_id: string;
   created_at: string;
   file_path: string;
   industry: string;
   updated_at: string;
 };
 
+type Client = {
+  id: string;
+  name: string;
+  industry: string;
+};
+
 export default function Vault() {
   const [searchQuery, setSearchQuery] = useState("");
   const [files, setFiles] = useState<FileRecord[]>([]);
+  const [clients, setClients] = useState<Client[]>([]);
   const [isUploading, setIsUploading] = useState(false);
   const [selectedFiles, setSelectedFiles] = useState<string[]>([]);
+  const { toast } = useToast();
+
+  const fetchClients = async () => {
+    const { data, error } = await supabase
+      .from("clients")
+      .select("*")
+      .order("name");
+
+    if (error) {
+      console.error("Error fetching clients:", error);
+      return;
+    }
+
+    setClients(data || []);
+  };
 
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
@@ -54,16 +71,25 @@ export default function Vault() {
           filename: file.name,
           file_path: filePath,
           document_type: "Contract",
-          client: "Unassigned",
-          industry: "Legal", // Adding a default value for industry
+          client_id: null,
+          industry: "Legal",
         });
 
         if (dbError) throw dbError;
       }
 
       fetchFiles();
+      toast({
+        title: "Success",
+        description: "Files uploaded successfully",
+      });
     } catch (error) {
       console.error("Error uploading files:", error);
+      toast({
+        title: "Error",
+        description: "Failed to upload files",
+        variant: "destructive",
+      });
     } finally {
       setIsUploading(false);
     }
@@ -73,26 +99,29 @@ export default function Vault() {
     if (!result.destination) return;
     
     const { draggableId, destination } = result;
-    const newClient = destination.droppableId;
+    const clientId = destination.droppableId;
 
     try {
       const { error } = await supabase
         .from('files')
-        .update({ client: newClient })
+        .update({ client_id: clientId })
         .eq('id', draggableId);
 
       if (error) throw error;
       
       fetchFiles();
+      toast({
+        title: "Success",
+        description: "File moved successfully",
+      });
     } catch (error) {
       console.error('Error updating file client:', error);
+      toast({
+        title: "Error",
+        description: "Failed to move file",
+        variant: "destructive",
+      });
     }
-  };
-
-  const analyzeSelectedDocuments = async () => {
-    // This would call your AI service to analyze the selected documents
-    // For demo purposes, we'll just show a success message
-    console.log("Analyzing documents:", selectedFiles);
   };
 
   const fetchFiles = async () => {
@@ -109,7 +138,18 @@ export default function Vault() {
     setFiles(data || []);
   };
 
-  const clients = ["Client A", "Client B", "Client C", "Unassigned"];
+  useEffect(() => {
+    fetchFiles();
+    fetchClients();
+  }, []);
+
+  const analyzeSelectedDocuments = async () => {
+    toast({
+      title: "Analysis Started",
+      description: "Selected documents are being analyzed...",
+    });
+    console.log("Analyzing documents:", selectedFiles);
+  };
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -128,6 +168,7 @@ export default function Vault() {
           <Tabs defaultValue="files" className="animate-fade-up">
             <TabsList>
               <TabsTrigger value="files">Files</TabsTrigger>
+              <TabsTrigger value="clients">Clients</TabsTrigger>
               <TabsTrigger value="insights">AI Insights</TabsTrigger>
             </TabsList>
 
@@ -168,18 +209,56 @@ export default function Vault() {
 
                 <DragDropContext onDragEnd={handleDragEnd}>
                   <div className="grid grid-cols-4 gap-4">
+                    <Droppable key="unassigned" droppableId="null">
+                      {(provided) => (
+                        <div
+                          ref={provided.innerRef}
+                          {...provided.droppableProps}
+                          className="glass p-4 rounded-lg"
+                        >
+                          <h3 className="font-medium mb-4">Unassigned</h3>
+                          <div className="space-y-2">
+                            {files
+                              .filter((file) => !file.client_id)
+                              .map((file, index) => (
+                                <Draggable
+                                  key={file.id}
+                                  draggableId={file.id}
+                                  index={index}
+                                >
+                                  {(provided) => (
+                                    <div
+                                      ref={provided.innerRef}
+                                      {...provided.draggableProps}
+                                      {...provided.dragHandleProps}
+                                      className="flex items-center gap-3 p-3 glass rounded-lg glass-hover cursor-pointer"
+                                    >
+                                      <FileText className="h-5 w-5 text-white/40" />
+                                      <span className="text-sm truncate">
+                                        {file.filename}
+                                      </span>
+                                    </div>
+                                  )}
+                                </Draggable>
+                              ))}
+                            {provided.placeholder}
+                          </div>
+                        </div>
+                      )}
+                    </Droppable>
+                    
                     {clients.map((client) => (
-                      <Droppable key={client} droppableId={client}>
+                      <Droppable key={client.id} droppableId={client.id}>
                         {(provided) => (
                           <div
                             ref={provided.innerRef}
                             {...provided.droppableProps}
                             className="glass p-4 rounded-lg"
                           >
-                            <h3 className="font-medium mb-4">{client}</h3>
+                            <h3 className="font-medium mb-4">{client.name}</h3>
                             <div className="space-y-2">
                               {files
-                                .filter((file) => file.client === client)
+                                .filter((file) => file.client_id === client.id)
                                 .map((file, index) => (
                                   <Draggable
                                     key={file.id}
@@ -209,6 +288,12 @@ export default function Vault() {
                     ))}
                   </div>
                 </DragDropContext>
+              </div>
+            </TabsContent>
+
+            <TabsContent value="clients">
+              <div className="glass rounded-2xl p-8">
+                <ClientManagement clients={clients} onClientUpdate={fetchClients} />
               </div>
             </TabsContent>
 
