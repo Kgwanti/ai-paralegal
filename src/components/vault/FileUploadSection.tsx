@@ -1,5 +1,6 @@
 
-import { FileUp, Search } from "lucide-react";
+import { useState } from 'react';
+import { FileUp, Search, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
