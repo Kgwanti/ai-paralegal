@@ -1,6 +1,10 @@
-import { FileText, Brain, Database, Workflow, MessageSquare } from "lucide-react";
+
+import { FileText, Brain, Database, Workflow, MessageSquare, LogOut } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/components/ui/use-toast";
 
 const menuItems = [
   { icon: Brain, label: "AI Paralegal", href: "/ai-paralegal" },
@@ -12,13 +16,29 @@ const menuItems = [
 
 export function Sidebar() {
   const location = useLocation();
+  const navigate = useNavigate();
+  const { toast } = useToast();
+
+  const handleSignOut = async () => {
+    try {
+      const { error } = await supabase.auth.signOut();
+      if (error) throw error;
+      navigate("/auth");
+    } catch (error: any) {
+      toast({
+        title: "Error signing out",
+        description: error.message,
+        variant: "destructive",
+      });
+    }
+  };
 
   return (
     <aside className="fixed left-0 top-0 h-screen w-64 glass border-r border-white/[0.1] p-6 animate-slide-in">
       <div className="flex flex-col h-full">
         <Link to="/" className="text-2xl font-serif mb-8">NexData</Link>
 
-        <nav className="space-y-2">
+        <nav className="space-y-2 flex-1">
           {menuItems.map((item) => (
             <Link
               key={item.label}
@@ -34,6 +54,15 @@ export function Sidebar() {
             </Link>
           ))}
         </nav>
+
+        <Button
+          variant="ghost"
+          className="justify-start px-4 py-3 h-auto glass-hover"
+          onClick={handleSignOut}
+        >
+          <LogOut className="h-5 w-5 mr-3" />
+          Sign Out
+        </Button>
       </div>
     </aside>
   );
