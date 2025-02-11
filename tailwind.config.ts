@@ -65,11 +65,21 @@ export default {
           "0%": { transform: "translateX(-100%)" },
           "100%": { transform: "translateX(0)" },
         },
+        "slow-spin": {
+          "0%": { transform: "rotate(0deg)" },
+          "100%": { transform: "rotate(360deg)" },
+        },
+        "fibonacci-draw": {
+          "0%": { strokeDashoffset: "1000", opacity: "0" },
+          "100%": { strokeDashoffset: "0", opacity: "1" },
+        },
       },
       animation: {
         "fade-up": "fade-up 0.5s ease-out",
         "fade-down": "fade-down 0.5s ease-out",
         "slide-in": "slide-in 0.3s ease-out",
+        "slow-spin": "slow-spin 20s linear infinite",
+        "fibonacci-draw": "fibonacci-draw 2s ease-out forwards",
       },
     },
   },

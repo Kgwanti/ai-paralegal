@@ -78,4 +78,9 @@
   .animate-glow {
     animation: glow 3s ease-in-out infinite;
   }
+
+  [class^="animate-fibonacci-draw"] {
+    stroke-dasharray: 1000;
+    stroke-dashoffset: 1000;
+  }
 }
