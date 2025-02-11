@@ -57,31 +57,31 @@ export default function Auth() {
           width="1000"
           height="1000"
           viewBox="0 0 1000 1000"
-          className="w-full h-full max-w-[150%] max-h-[150%] animate-slow-spin"
+          className="w-[200%] h-[200%] max-w-none max-h-none animate-slow-spin"
         >
           <path
-            d="M500,500 L500,200 A300,300 0 0,1 800,500 A300,300 0 0,1 500,800 A300,300 0 0,1 200,500 A300,300 0 0,1 500,200"
+            d="M500,500 L500,100 A400,400 0 0,1 900,500 A400,400 0 0,1 500,900 A400,400 0 0,1 100,500 A400,400 0 0,1 500,100"
             fill="none"
             stroke="white"
             strokeWidth="1"
             className="animate-fibonacci-draw"
           />
           <path
-            d="M500,500 L500,320 A180,180 0 0,1 680,500 A180,180 0 0,1 500,680 A180,180 0 0,1 320,500 A180,180 0 0,1 500,320"
+            d="M500,500 L500,250 A250,250 0 0,1 750,500 A250,250 0 0,1 500,750 A250,250 0 0,1 250,500 A250,250 0 0,1 500,250"
             fill="none"
             stroke="white"
             strokeWidth="1"
             className="animate-fibonacci-draw [animation-delay:0.5s]"
           />
           <path
-            d="M500,500 L500,400 A100,100 0 0,1 600,500 A100,100 0 0,1 500,600 A100,100 0 0,1 400,500 A100,100 0 0,1 500,400"
+            d="M500,500 L500,350 A150,150 0 0,1 650,500 A150,150 0 0,1 500,650 A150,150 0 0,1 350,500 A150,150 0 0,1 500,350"
             fill="none"
             stroke="white"
             strokeWidth="1"
             className="animate-fibonacci-draw [animation-delay:1s]"
           />
           <path
-            d="M500,500 L500,450 A50,50 0 0,1 550,500 A50,50 0 0,1 500,550 A50,50 0 0,1 450,500 A50,50 0 0,1 500,450"
+            d="M500,500 L500,425 A75,75 0 0,1 575,500 A75,75 0 0,1 500,575 A75,75 0 0,1 425,500 A75,75 0 0,1 500,425"
             fill="none"
             stroke="white"
             strokeWidth="1"
