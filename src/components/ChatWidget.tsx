@@ -105,7 +105,8 @@ How can I help you with any of these areas today?`,
       )}
 
       {isOpen && (
-        <div className="bg-background border rounded-lg shadow-lg w-80 h-96 flex flex-col animate-in slide-in-from-bottom-10">
+        <div className="bg-background border rounded-lg shadow-lg w-80 h-96 flex flex-col animate-in slide-in-from-bottom-10 relative">
+          <div className="absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-transparent via-white/50 to-transparent animate-glow" />
           <div className="p-4 border-b flex justify-between items-center">
             <h3 className="font-medium">Document Assistant</h3>
             <div className="flex gap-2">

@@ -158,7 +158,8 @@ How can I help you with any of these areas today?`,
   };
 
   return (
-    <div className="flex flex-col h-full glass rounded-xl overflow-hidden">
+    <div className="flex flex-col h-full glass rounded-xl overflow-hidden relative">
+      <div className="absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-transparent via-white/50 to-transparent animate-glow" />
       <ChatHeader 
         showHelpHint={showHelpHint}
         onRefresh={handleRefresh}
