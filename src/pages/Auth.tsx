@@ -51,6 +51,15 @@ export default function Auth() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-background p-4 relative overflow-hidden">
+      {/* Glowing Dots */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="glow-dot left-1/4 top-1/4"></div>
+        <div className="glow-dot left-3/4 top-1/3"></div>
+        <div className="glow-dot left-1/3 top-2/3"></div>
+        <div className="glow-dot left-2/3 top-3/4"></div>
+        <div className="glow-dot left-1/2 top-1/2"></div>
+      </div>
+
       {/* Fibonacci Spiral SVG */}
       <div className="absolute inset-0 flex items-center justify-center opacity-20">
         <svg
